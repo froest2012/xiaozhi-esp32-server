@@ -25,6 +25,7 @@ import xiaozhi.common.validator.AssertUtils;
 import xiaozhi.common.validator.ValidatorUtils;
 import xiaozhi.modules.security.dto.LoginDTO;
 import xiaozhi.modules.security.dto.SmsVerificationDTO;
+import xiaozhi.modules.security.dto.SmsVerifyDTO;
 import xiaozhi.modules.security.password.PasswordUtils;
 import xiaozhi.modules.security.service.CaptchaService;
 import xiaozhi.modules.security.service.SysUserTokenService;
@@ -77,6 +78,22 @@ public class MobileLoginController {
             throw new RenException("请检测用户和密码是否输入错误");
         }
         return sysUserTokenService.createToken(userDTO.getId());
+    }
+
+    @PostMapping("/smsVerify")
+    @Operation(summary = "短信验证码")
+    public Result<Void> smsVerify(@RequestBody SmsVerifyDTO dto) {
+        Boolean isMobileRegister = sysParamsService
+            .getValueObject(Constant.SysMSMParam.SERVER_ENABLE_MOBILE_REGISTER.getValue(), Boolean.class);
+        if (!isMobileRegister) {
+            throw new RenException("没有开启手机注册，没法使用短信验证码功能");
+        }
+        // 验证短信验证码是否正常
+        boolean validate = captchaService.validateSMSValidateCode(dto.getUsername(), dto.getMobileCaptcha(), false);
+        if (!validate) {
+            throw new RenException("手机验证码错误，请重新获取");
+        }
+        return new Result<>();
     }
 
     @PostMapping("/register")

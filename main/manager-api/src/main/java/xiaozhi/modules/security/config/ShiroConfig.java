@@ -84,6 +84,7 @@ public class ShiroConfig {
         filterMap.put("/mobile/user/smsVerification", "anon");
         filterMap.put("/mobile/user/login", "anon");
         filterMap.put("/mobile/user/register", "anon");
+        filterMap.put("/mobile/user/smsVerify", "anon");
         filterMap.put("/user/login", "anon");
         filterMap.put("/user/pub-config", "anon");
         filterMap.put("/user/register", "anon");
