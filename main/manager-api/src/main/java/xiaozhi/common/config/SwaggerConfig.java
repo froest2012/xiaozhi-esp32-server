@@ -80,6 +80,14 @@ public class SwaggerConfig {
     }
 
     @Bean
+    public GroupedOpenApi mobileApi() {
+        return GroupedOpenApi.builder()
+            .group("mobile")
+            .pathsToMatch("/mobile/**")
+            .build();
+    }
+
+    @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI().info(new Info()
                 .title("xiaozhi-esp32-manager-api")
