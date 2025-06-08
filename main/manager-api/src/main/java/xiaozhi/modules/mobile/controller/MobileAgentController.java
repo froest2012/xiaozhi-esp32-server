@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -44,6 +45,8 @@ import xiaozhi.modules.agent.service.AgentChatAudioService;
 import xiaozhi.modules.agent.service.AgentChatHistoryService;
 import xiaozhi.modules.agent.service.AgentService;
 import xiaozhi.modules.agent.service.AgentTemplateService;
+import xiaozhi.modules.alert.dto.AiRiskKeywordAlertDTO;
+import xiaozhi.modules.alert.service.AiRiskKeywordAlertService;
 import xiaozhi.modules.device.entity.DeviceEntity;
 import xiaozhi.modules.device.service.DeviceService;
 import xiaozhi.modules.security.user.SecurityUser;
@@ -58,6 +61,7 @@ public class MobileAgentController {
     private final DeviceService deviceService;
     private final AgentChatHistoryService agentChatHistoryService;
     private final AgentChatAudioService agentChatAudioService;
+    private final AiRiskKeywordAlertService aiRiskKeywordAlertService;
     private final RedisUtils redisUtils;
 
     @GetMapping("/list")
@@ -257,6 +261,16 @@ public class MobileAgentController {
 
         // 查询聊天记录
         List<AgentChatHistoryDTO> result = agentChatHistoryService.getChatHistoryBySessionId(id, sessionId);
+        //获取风险词
+        List<AiRiskKeywordAlertDTO> riskKeywords = aiRiskKeywordAlertService.listByIds(
+            result.stream().map(AgentChatHistoryDTO::getId).toList());
+        Map<Long, AiRiskKeywordAlertDTO> riskKeywordsMap = riskKeywords.stream().collect(Collectors.toMap(AiRiskKeywordAlertDTO::getChatHistoryId, v -> v));
+        for (AgentChatHistoryDTO item : result) {
+            AiRiskKeywordAlertDTO riskKeyword = riskKeywordsMap.get(item.getId());
+            if (riskKeyword != null && StringUtils.isNotEmpty(riskKeyword.getRiskKey())) {
+                item.setRiskKeywords(riskKeyword.getRiskKey());
+            }
+        }
         return new Result<List<AgentChatHistoryDTO>>().ok(result);
     }
 

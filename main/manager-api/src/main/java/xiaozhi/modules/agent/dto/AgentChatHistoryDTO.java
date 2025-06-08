@@ -11,6 +11,10 @@ import lombok.Data;
 @Data
 @Schema(description = "智能体聊天记录")
 public class AgentChatHistoryDTO {
+
+    @Schema(description = "ID")
+    private Long id;
+
     @Schema(description = "创建时间")
     private Date createdAt;
 
@@ -25,4 +29,7 @@ public class AgentChatHistoryDTO {
 
     @Schema(description = "MAC地址")
     private String macAddress;
+
+    @Schema(description = "风险词列表")
+    private String riskKeywords;
 }
