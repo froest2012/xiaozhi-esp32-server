@@ -19,6 +19,7 @@ import xiaozhi.modules.agent.service.AgentChatAudioService;
 import xiaozhi.modules.agent.service.AgentChatHistoryService;
 import xiaozhi.modules.agent.service.AgentService;
 import xiaozhi.modules.agent.service.biz.AgentChatHistoryBizService;
+import xiaozhi.modules.alert.service.AiRiskKeywordAlertService;
 
 /**
  * {@link AgentChatHistoryBizService} impl
@@ -34,6 +35,7 @@ public class AgentChatHistoryBizServiceImpl implements AgentChatHistoryBizServic
     private final AgentService agentService;
     private final AgentChatHistoryService agentChatHistoryService;
     private final AgentChatAudioService agentChatAudioService;
+    private final AiRiskKeywordAlertService aiRiskKeywordAlertService;
     private final RedisUtils redisUtils;
 
     /**
@@ -108,7 +110,8 @@ public class AgentChatHistoryBizServiceImpl implements AgentChatHistoryBizServic
 
         // 保存数据
         agentChatHistoryService.save(entity);
-
+        //检测风险词并保存
+        aiRiskKeywordAlertService.detectKeywords(entity);
         log.info("设备 {} 对应智能体 {} 上报成功", macAddress, agentId);
     }
 }
