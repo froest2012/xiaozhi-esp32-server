@@ -1,14 +1,18 @@
 package xiaozhi.modules.mobile.controller;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -49,6 +53,7 @@ import xiaozhi.modules.alert.dto.AiRiskKeywordAlertDTO;
 import xiaozhi.modules.alert.service.AiRiskKeywordAlertService;
 import xiaozhi.modules.device.entity.DeviceEntity;
 import xiaozhi.modules.device.service.DeviceService;
+import xiaozhi.modules.mobile.controller.dto.ChatHistoryParam;
 import xiaozhi.modules.security.user.SecurityUser;
 
 @Tag(name = "移动端智能体管理")
@@ -272,6 +277,37 @@ public class MobileAgentController {
             }
         }
         return new Result<List<AgentChatHistoryDTO>>().ok(result);
+    }
+
+    @PostMapping("/device/chat-history")
+    @Operation(summary = "获取智能体聊天记录")
+    @RequiresPermissions("sys:role:normal")
+    public Result<List<List<AgentChatHistoryDTO>>> getAgentChatHistoryByMacAddress(@RequestBody ChatHistoryParam param) {
+        // 获取当前用户
+        UserDetail user = SecurityUser.getUser();
+
+        // 检查权限
+        if (!agentService.checkAgentPermission(param.getAgentId(), user.getId())) {
+            return new Result<List<List<AgentChatHistoryDTO>>>().error("没有权限查看该智能体的聊天记录");
+        }
+
+        // 查询聊天记录
+        List<AgentChatHistoryDTO> result = agentChatHistoryService.getChatHistoryByMacAddress(param.getAgentId(), param.getMacAddress());
+        if (CollectionUtil.isEmpty(result)) {
+            return new Result<List<List<AgentChatHistoryDTO>>>().ok(new ArrayList<>());
+        }
+        //获取风险词
+        List<AiRiskKeywordAlertDTO> riskKeywords = aiRiskKeywordAlertService.listByIds(
+            result.stream().map(AgentChatHistoryDTO::getId).toList());
+        Map<Long, AiRiskKeywordAlertDTO> riskKeywordsMap = riskKeywords.stream().collect(Collectors.toMap(AiRiskKeywordAlertDTO::getChatHistoryId, v -> v));
+        for (AgentChatHistoryDTO item : result) {
+            AiRiskKeywordAlertDTO riskKeyword = riskKeywordsMap.get(item.getId());
+            if (riskKeyword != null && StringUtils.isNotEmpty(riskKeyword.getRiskKey())) {
+                item.setRiskKeywords(riskKeyword.getRiskKey());
+            }
+        }
+        Map<String, List<AgentChatHistoryDTO>> resultMap = result.stream().collect(Collectors.groupingBy(AgentChatHistoryDTO::getSessionId, LinkedHashMap::new, Collectors.toList()));
+        return new Result<List<List<AgentChatHistoryDTO>>>().ok(new ArrayList<>(resultMap.values()));
     }
 
     @PostMapping("/audio/{audioId}")
