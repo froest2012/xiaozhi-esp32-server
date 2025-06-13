@@ -280,7 +280,7 @@ public class MobileAgentController {
     }
 
     @PostMapping("/device/chat-history")
-    @Operation(summary = "获取智能体聊天记录")
+    @Operation(summary = "获取智能体设备聊天记录")
     @RequiresPermissions("sys:role:normal")
     public Result<List<List<AgentChatHistoryDTO>>> getAgentChatHistoryByMacAddress(@RequestBody ChatHistoryParam param) {
         // 获取当前用户
