@@ -32,4 +32,7 @@ public class AgentChatHistoryDTO {
 
     @Schema(description = "风险词列表")
     private String riskKeywords;
+
+    @Schema(description = "sessionId")
+    private String sessionId;
 }
