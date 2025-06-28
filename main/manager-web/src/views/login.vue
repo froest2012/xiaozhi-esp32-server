@@ -30,13 +30,14 @@
 
             <!-- 手机号登录 -->
             <template v-else>
-              <div class="input-box">
-                <div style="display: flex; align-items: center; width: 100%;" :class="{'mobile-flex': isMobile}">
-                  <el-select v-model="form.areaCode" :style="isMobile ? 'width: 120px; margin-right: 5px;' : 'width: 220px; margin-right: 10px;'">
+              <div class="input-box mobile-input-container" :class="{'mobile-phone-box': isMobile}">
+                <img loading="lazy" alt="" class="input-icon" src="@/assets/login/username.png" />
+                <div class="phone-input-wrapper" :class="{'mobile-phone-wrapper': isMobile}">
+                  <el-select v-model="form.areaCode" class="area-code-select" :class="{'mobile-area-select': isMobile}">
                     <el-option v-for="item in mobileAreaList" :key="item.key" :label="isMobile ? item.key : `${item.name} (${item.key})`"
                       :value="item.key" />
                   </el-select>
-                  <el-input v-model="form.mobile" placeholder="请输入手机号码" />
+                  <el-input v-model="form.mobile" placeholder="请输入手机号码" class="mobile-number-input" />
                 </div>
               </div>
             </template>
@@ -258,25 +259,62 @@ export default {
   }
 }
 
-/* 移动端特定样式 */
-.mobile-flex {
-  flex-direction: column;
-  align-items: flex-start;
+/* 手机号输入框样式 */
+.mobile-input-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.phone-input-wrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
   gap: 10px;
 }
 
+.area-code-select {
+  width: 140px;
+  flex-shrink: 0;
+}
+
+.mobile-number-input {
+  flex: 1;
+}
+
+/* 移动端手机号输入框样式 */
+.mobile-phone-box {
+  padding: 0 10px;
+  gap: 10px;
+}
+
+.mobile-phone-wrapper {
+  gap: 8px;
+}
+
+.mobile-area-select {
+  width: 85px !important;
+  min-width: 85px;
+}
+
+/* 区号选择器通用样式优化 */
+.area-code-select :deep(.el-input__inner) {
+  background-color: transparent;
+  border: none;
+}
+
+.mobile-number-input :deep(.el-input__inner) {
+  background-color: transparent;
+  border: none;
+}
+
+/* 移动端特定样式 */
 .mobile-captcha {
   flex-direction: column;
   align-items: center;
 }
 
 @media screen and (max-width: 768px) {
-  .el-select {
-    width: 100% !important;
-    margin-right: 0 !important;
-    margin-bottom: 10px;
-  }
-
   /* 优化移动端布局 */
   .el-header {
     padding: 10px 0;
@@ -301,6 +339,52 @@ export default {
   .input-icon {
     width: 16px;
     height: 16px;
+  }
+
+  /* 移动端手机号输入框优化 */
+  .mobile-phone-box {
+    height: 38px;
+    padding: 0 12px;
+  }
+
+  .mobile-area-select :deep(.el-input__inner) {
+    padding: 0 6px;
+    padding-right: 20px;
+    font-size: 13px;
+    text-align: center;
+    font-weight: 500;
+  }
+
+  .mobile-number-input :deep(.el-input__inner) {
+    padding: 0 10px;
+    font-size: 14px;
+  }
+
+  /* 区号选择器下拉箭头优化 */
+  .mobile-area-select :deep(.el-input__suffix) {
+    right: 4px;
+    width: 16px;
+  }
+
+  .mobile-area-select :deep(.el-input__suffix .el-input__suffix-inner) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mobile-area-select :deep(.el-icon-arrow-up) {
+    font-size: 11px;
+  }
+
+  /* 确保手机号输入框组件在移动端的最小宽度 */
+  .mobile-phone-wrapper {
+    min-width: 0;
+  }
+
+  .mobile-area-select {
+    width: 88px !important;
+    min-width: 88px;
+    max-width: 88px;
   }
 }
 </style>
