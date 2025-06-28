@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :visible="visible" :close-on-click-modal="false" @update:visible="handleVisibleChange" width="57%" center custom-class="custom-dialog"
+  <el-dialog :visible="visible" :close-on-click-modal="false" @update:visible="handleVisibleChange" :width="isMobile ? '95%' : '57%'" center custom-class="custom-dialog"
     :show-close="false" class="center-dialog">
 
     <div style="margin: 0 18px; text-align: left; padding: 10px; border-radius: 10px;">
@@ -9,42 +9,42 @@
 
       <button class="custom-close-btn" @click="handleClose">×</button>
 
-      <el-form :model="form" label-width="100px" :rules="rules" ref="form" class="custom-form">
-        <div style="display: flex; gap: 20px; margin-bottom: 20px;">
-          <el-form-item label="类别" prop="modelType" style="flex: 1;">
-            <el-select v-model="form.modelType" placeholder="请选择类别" class="custom-input-bg" style="width: 100%;">
+      <el-form :model="form" :label-width="isMobile ? '80px' : '100px'" :rules="rules" ref="form" :class="['custom-form', { 'mobile-form': isMobile }]">
+        <div :class="['form-row', { 'mobile-form-row': isMobile }]">
+          <el-form-item label="类别" prop="modelType" :class="['form-item', { 'mobile-form-item': isMobile }]">
+            <el-select v-model="form.modelType" placeholder="请选择类别" :class="['custom-input-bg', { 'mobile-select': isMobile }]" style="width: 100%;">
               <el-option v-for="item in modelTypes" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
 
-          <el-form-item label="编码" prop="providerCode" style="flex: 1;">
-            <el-input v-model="form.providerCode" placeholder="请输入供应器编码" class="custom-input-bg"></el-input>
+          <el-form-item label="编码" prop="providerCode" :class="['form-item', { 'mobile-form-item': isMobile }]">
+            <el-input v-model="form.providerCode" placeholder="请输入供应器编码" :class="['custom-input-bg', { 'mobile-input': isMobile }]"></el-input>
           </el-form-item>
         </div>
 
-        <div style="display: flex; gap: 20px; margin-bottom: 20px;">
-          <el-form-item label="名称" prop="name" style="flex: 1;">
-            <el-input v-model="form.name" placeholder="请输入供应器名称" class="custom-input-bg"></el-input>
+        <div :class="['form-row', { 'mobile-form-row': isMobile }]">
+          <el-form-item label="名称" prop="name" :class="['form-item', { 'mobile-form-item': isMobile }]">
+            <el-input v-model="form.name" placeholder="请输入供应器名称" :class="['custom-input-bg', { 'mobile-input': isMobile }]"></el-input>
           </el-form-item>
-          <el-form-item label="排序" prop="sort" style="flex: 1;">
-            <el-input-number v-model="form.sort" :min="0" controls-position="right" class="custom-input-bg"
+          <el-form-item label="排序" prop="sort" :class="['form-item', { 'mobile-form-item': isMobile }]">
+            <el-input-number v-model="form.sort" :min="0" controls-position="right" :class="['custom-input-bg', { 'mobile-input-number': isMobile }]"
               style="width: 100%;"></el-input-number>
           </el-form-item>
         </div>
 
-        <div style="font-size: 20px; font-weight: bold; color: #3d4566; margin-bottom: 15px;">
+        <div :class="['fields-header', { 'mobile-fields-header': isMobile }]">
           字段配置
           <div style="display: inline-block; float: right;">
-            <el-button type="primary" @click="addField" size="small" style="background: #5bc98c; border: none;"
+            <el-button type="primary" @click="addField" :size="isMobile ? 'mini' : 'small'" style="background: #5bc98c; border: none;"
               :disabled="hasIncompleteFields">
               添加
             </el-button>
-            <el-button type="primary" @click="toggleSelectAllFields" size="small"
+            <el-button type="primary" @click="toggleSelectAllFields" :size="isMobile ? 'mini' : 'small'"
               style="background: #5f70f3; border: none; margin-left: 10px;">
               {{ isAllFieldsSelected ? '取消全选' : '全选' }}
             </el-button>
-            <el-button type="danger" @click="batchRemoveFields" size="small"
+            <el-button type="danger" @click="batchRemoveFields" :size="isMobile ? 'mini' : 'small'"
               style="background: red; border: none; margin-left: 10px;">
               批量删除
             </el-button>
@@ -52,37 +52,37 @@
         </div>
         <div style="height: 2px; background: #e9e9e9; margin-bottom: 22px;"></div>
 
-        <div class="fields-container">
-          <el-table :data="form.fields" style="width: 100%;" border size="medium" :key="tableKey">
-            <el-table-column label="选择" align="center" width="50">
+        <div :class="['fields-container', { 'mobile-fields-container': isMobile }]">
+          <el-table :data="form.fields" style="width: 100%;" border :size="isMobile ? 'mini' : 'medium'" :key="tableKey">
+            <el-table-column label="选择" align="center" :width="isMobile ? 40 : 50">
               <template slot-scope="scope">
-                <el-checkbox v-model="scope.row.selected" @change="handleFieldSelectChange"></el-checkbox>
+                <el-checkbox v-model="scope.row.selected" @change="handleFieldSelectChange" :class="{ 'mobile-checkbox': isMobile }"></el-checkbox>
               </template>
             </el-table-column>
-            <el-table-column label="字段key">
+            <el-table-column label="字段key" :width="isMobile ? 80 : undefined">
               <template slot-scope="scope">
                 <template v-if="scope.row.editing">
-                  <el-input v-model="scope.row.key" placeholder="字段key"></el-input>
+                  <el-input v-model="scope.row.key" placeholder="字段key" :size="isMobile ? 'mini' : 'small'"></el-input>
                 </template>
                 <template v-else>
                   {{ scope.row.key }}
                 </template>
               </template>
             </el-table-column>
-            <el-table-column label="字段标签">
+            <el-table-column label="字段标签" :width="isMobile ? 80 : undefined">
               <template slot-scope="scope">
                 <template v-if="scope.row.editing">
-                  <el-input v-model="scope.row.label" placeholder="字段标签"></el-input>
+                  <el-input v-model="scope.row.label" placeholder="字段标签" :size="isMobile ? 'mini' : 'small'"></el-input>
                 </template>
                 <template v-else>
                   {{ scope.row.label }}
                 </template>
               </template>
             </el-table-column>
-            <el-table-column label="字段类型">
+            <el-table-column label="字段类型" :width="isMobile ? 80 : undefined">
               <template slot-scope="scope">
                 <template v-if="scope.row.editing">
-                  <el-select v-model="scope.row.type" placeholder="类型">
+                  <el-select v-model="scope.row.type" placeholder="类型" :size="isMobile ? 'mini' : 'small'">
                     <el-option label="字符串" value="string"></el-option>
                     <el-option label="数字" value="number"></el-option>
                     <el-option label="布尔值" value="boolean"></el-option>
@@ -95,26 +95,26 @@
                 </template>
               </template>
             </el-table-column>
-            <el-table-column label="默认值">
+            <el-table-column label="默认值" :width="isMobile ? 80 : undefined">
               <template slot-scope="scope">
                 <template v-if="scope.row.editing">
-                  <el-input v-model="scope.row.default" placeholder="请输入默认值"></el-input>
+                  <el-input v-model="scope.row.default" placeholder="请输入默认值" :size="isMobile ? 'mini' : 'small'"></el-input>
                 </template>
                 <template v-else>
                   {{ scope.row.default }}
                 </template>
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="150" align="center">
+            <el-table-column label="操作" :width="isMobile ? 100 : 150" align="center">
               <template slot-scope="scope">
                 <el-button v-if="!scope.row.editing" type="primary" size="mini" @click="startEditing(scope.row)">
-                  编辑
+                  {{ isMobile ? '编辑' : '编辑' }}
                 </el-button>
                 <el-button v-else type="success" size="mini" @click="stopEditing(scope.row)">
-                  完成
+                  {{ isMobile ? '完成' : '完成' }}
                 </el-button>
                 <el-button type="danger" size="mini" @click="removeField(scope.$index)">
-                  删除
+                  {{ isMobile ? '删除' : '删除' }}
                 </el-button>
               </template>
             </el-table-column>
@@ -123,13 +123,15 @@
       </el-form>
     </div>
 
-    <div style="display: flex; justify-content: center;">
-      <el-button type="primary" @click="submit" class="save-btn" :loading="saving">保存</el-button>
+    <div :class="['save-container', { 'mobile-save-container': isMobile }]">
+      <el-button type="primary" @click="submit" :class="['save-btn', { 'mobile-save-btn': isMobile }]" :loading="saving" :size="isMobile ? 'small' : 'medium'">保存</el-button>
     </div>
   </el-dialog>
 </template>
 
 <script>
+import { isMobileDevice } from "@/utils/index";
+
 export default {
   props: {
     title: String,
@@ -150,6 +152,9 @@ export default {
     };
   },
   computed: {
+    isMobile() {
+      return isMobileDevice();
+    },
     hasIncompleteFields() {
       return this.form.fields && this.form.fields.some(field =>
         !field.key || !field.label || !field.type
@@ -380,6 +385,123 @@ export default {
 
 .custom-form .el-form-item {
   margin-bottom: 20px;
+}
+
+// 移动端表单样式
+.form-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+
+  &.mobile-form-row {
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+}
+
+.form-item {
+  flex: 1;
+
+  &.mobile-form-item {
+    flex: none;
+  }
+}
+
+// 移动端输入框样式
+.mobile-input {
+  :deep(.el-input__inner) {
+    height: 36px !important;
+    font-size: 14px !important;
+  }
+}
+
+.mobile-select {
+  :deep(.el-input__inner) {
+    height: 36px !important;
+    font-size: 14px !important;
+  }
+}
+
+.mobile-input-number {
+  :deep(.el-input__inner) {
+    height: 36px !important;
+    font-size: 14px !important;
+  }
+}
+
+// 移动端字段配置样式
+.fields-header {
+  font-size: 20px;
+  font-weight: bold;
+  color: #3d4566;
+  margin-bottom: 15px;
+
+  &.mobile-fields-header {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+}
+
+.fields-container {
+  &.mobile-fields-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+
+    .el-table {
+      min-width: 500px;
+      font-size: 12px;
+
+      .el-table__header th {
+        padding: 6px 0;
+        font-size: 12px;
+      }
+
+      .el-table__body td {
+        padding: 6px 0;
+      }
+
+      .cell {
+        padding: 0 4px;
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+// 移动端复选框样式
+.mobile-checkbox {
+  :deep(.el-checkbox__inner) {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  :deep(.el-checkbox__inner::after) {
+    height: 6px !important;
+    width: 3px !important;
+    left: 4px !important;
+    top: 1px !important;
+  }
+}
+
+// 保存按钮容器
+.save-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+
+  &.mobile-save-container {
+    padding: 15px 0;
+  }
+}
+
+.save-btn {
+  min-width: 120px;
+
+  &.mobile-save-btn {
+    min-width: 100px;
+    height: 36px;
+  }
 }
 
 .custom-form .el-form-item__label {

@@ -12,9 +12,9 @@ spring:
     druid:
       #MySQL
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://192.168.1.8:3306/xiaozhi_esp32_server?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true
+      url: jdbc:mysql://localhost:3306/xiaozhi_esp32_server?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true
       username: root
-      password: 1qaz2wsx
+      password: qweQWE331792784
       initial-size: 10
       max-active: 100
       min-idle: 10
@@ -38,9 +38,9 @@ spring:
             multi-statement-allow: true
   data:
     redis:
-      host: 192.168.1.8
-      port: 63791
-      password: PEm9wXekcCKhK6g5
+      host: localhost
+      port: 6379
+      password:
       database: 0
       timeout: 10000ms
       lettuce:

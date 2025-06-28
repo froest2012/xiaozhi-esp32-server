@@ -103,3 +103,36 @@ echo "\n${RED}重要提示：${NC}"
 echo "1. 请确保编辑 data/.config.yaml 文件，配置必要的API密钥"
 echo "2. 特别是 ChatGLM 和 mem0ai 的密钥必须配置"
 echo "3. 配置完成后再启动 docker 服务"
+
+# 最大重试次数
+MAX_RETRIES=5
+retry_count=0
+build_success=false
+
+echo "开始构建 Docker 镜像..."
+
+while [ $retry_count -lt $MAX_RETRIES ] && [ "$build_success" != "true" ]; do
+    echo "尝试构建 (尝试 $((retry_count+1))/$MAX_RETRIES)..."
+
+    if docker-compose -f docker-compose.yml build --no-cache; then
+        build_success=true
+        echo "构建成功!"
+    else
+        retry_count=$((retry_count+1))
+        if [ $retry_count -lt $MAX_RETRIES ]; then
+            echo "构建失败，等待 30 秒后重试..."
+            sleep 30
+        else
+            echo "达到最大重试次数，构建失败。"
+        fi
+    fi
+done
+
+if [ "$build_success" = "true" ]; then
+    echo "启动容器..."
+    docker-compose -f docker-compose.yml up -d
+    echo "部署完成!"
+else
+    echo "构建失败，请检查网络连接或手动构建。"
+    exit 1
+fi
