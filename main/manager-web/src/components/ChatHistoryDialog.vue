@@ -16,7 +16,7 @@
             </div>
             <div class="chat-content">
                 <div v-if="currentSessionId" class="messages">
-                    <div v-for="(message, index) in messagesWithTime" :key="message.id">
+                    <div v-for="message in messagesWithTime" :key="message.id">
                         <div v-if="message.type === 'time'" class="time-divider">
                             {{ message.content }}
                         </div>
@@ -443,5 +443,136 @@ export default {
     overflow: hidden;
     height: calc(90vh - 54px);
     /* 减去标题栏的高度 */
+}
+
+/* 移动端适配样式 */
+@media screen and (max-width: 768px) {
+    .chat-history-dialog {
+        min-width: 100%;
+        max-width: 100%;
+        width: 100% !important;
+        height: 100vh !important;
+        max-height: 100vh;
+        top: 0 !important;
+        left: 0 !important;
+        transform: none !important;
+        margin: 0 !important;
+        border-radius: 0;
+    }
+
+        .chat-history-dialog .el-dialog__header {
+        padding: 12px 16px;
+    }
+
+    .chat-history-dialog .el-dialog__title {
+        font-size: 16px;
+        line-height: 1.4;
+    }
+
+    .chat-history-dialog .el-dialog__body {
+        height: calc(100vh - 48px);
+        padding: 0;
+    }
+
+    .chat-container {
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .session-list {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #eee;
+        padding: 8px 12px;
+        max-height: 40vh;
+        min-height: 200px;
+        overflow-y: auto;
+    }
+
+    .session-item {
+        padding: 8px;
+        margin-bottom: 6px;
+        border-radius: 6px;
+    }
+
+    .session-item .avatar {
+        width: 32px;
+        height: 32px;
+        margin-right: 8px;
+    }
+
+    .session-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .session-time {
+        font-size: 12px;
+        height: 24px;
+        line-height: 24px;
+        width: calc(100% - 25px);
+    }
+
+    .message-count {
+        font-size: 12px;
+        width: 18px;
+        height: 18px;
+        line-height: 18px;
+        margin-top: 3px;
+        margin-left: 4px;
+    }
+
+    .chat-content {
+        flex: 1;
+        padding: 12px;
+        overflow-y: auto;
+        height: auto;
+        min-height: 0;
+    }
+
+    .message-item {
+        margin-bottom: 12px;
+    }
+
+    .message-item .avatar {
+        width: 32px;
+        height: 32px;
+    }
+
+    .message-content {
+        max-width: 80%;
+        padding: 8px 12px;
+        margin: 0 8px;
+        font-size: 14px;
+        line-height: 18px;
+        border-radius: 6px;
+    }
+
+    .audio-icon {
+        font-size: 16px;
+        margin: 0 4px;
+    }
+
+    .time-divider {
+        margin: 8px 0;
+        font-size: 11px;
+    }
+
+    .time-divider::before,
+    .time-divider::after {
+        width: 25%;
+        margin: 0 8px;
+    }
+
+    .loading,
+    .no-more {
+        padding: 8px 8px 20px 8px;
+        font-size: 12px;
+    }
+
+    .no-session-selected {
+        font-size: 14px;
+        padding: 20px;
+    }
 }
 </style>

@@ -123,4 +123,39 @@ export default {
 ::v-deep .el-dialog__header {
   padding: 10px;
 }
+
+/* 移动端适配样式 */
+@media screen and (max-width: 768px) {
+  ::v-deep .el-dialog {
+    width: 85% !important;
+    margin: 0 auto !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+  }
+
+  ::v-deep .el-dialog__body {
+    padding: 8px 12px;
+  }
+
+  ::v-deep .el-dialog__header {
+    padding: 12px;
+  }
+
+  .input-46 {
+    margin-top: 8px !important;
+  }
+
+  .input-46 ::v-deep .el-input__inner {
+    height: 40px;
+    font-size: 14px;
+    padding: 0 12px;
+  }
+
+  .dialog-btn {
+    height: 36px;
+    line-height: 36px;
+    font-size: 14px;
+    border-radius: 18px;
+  }
+}
 </style>

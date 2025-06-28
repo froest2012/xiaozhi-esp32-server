@@ -834,4 +834,238 @@ export default {
     padding: 10px 0;
   }
 }
+
+/* 移动端适配样式 */
+@media screen and (max-width: 768px) {
+  /* 抽屉宽度调整为全屏 */
+  ::v-deep .el-drawer {
+    width: 100% !important;
+  }
+
+  ::v-deep .el-drawer__body {
+    padding: 0;
+    overflow-y: auto;
+  }
+
+  .custom-header {
+    padding: 16px 20px;
+    flex-wrap: wrap;
+
+    .bold-title {
+      font-size: 16px;
+    }
+  }
+
+  .custom-close-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 24px;
+    right: 16px;
+  }
+
+  /* 功能管理区域改为垂直布局 */
+  .function-manager {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    height: auto;
+    padding: 0 16px;
+  }
+
+  .function-column {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #EBEEF5;
+    padding: 12px 0;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+
+  .function-column:last-of-type {
+    border-bottom: none;
+  }
+
+  .params-column {
+    min-width: 100%;
+    width: 100%;
+    padding: 12px 0;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  .column-header {
+    margin-bottom: 8px;
+  }
+
+  .column-title {
+    font-size: 14px;
+    text-align: left;
+  }
+
+  .select-all-btn {
+    font-size: 12px;
+  }
+
+  .function-item {
+    padding: 6px 8px;
+    margin: 2px 0;
+  }
+
+  .func-tag {
+    margin-left: 6px;
+    font-size: 14px;
+  }
+
+  .color-dot {
+    width: 6px;
+    height: 6px;
+    margin-right: 6px;
+  }
+
+  /* 参数配置区域优化 */
+  .param-form {
+    .param-item {
+      font-size: 14px;
+    }
+
+    ::v-deep .el-form-item {
+      margin-bottom: 10px;
+
+      .el-form-item__label {
+        font-size: 12px !important;
+        margin-bottom: 4px;
+      }
+    }
+
+    ::v-deep .el-input__inner {
+      font-size: 14px;
+      height: 36px;
+    }
+
+    ::v-deep .el-textarea__inner {
+      font-size: 14px;
+      min-height: 60px;
+    }
+
+    ::v-deep .el-input-number {
+      width: 100%;
+    }
+  }
+
+  .params-container {
+    padding: 8px;
+    min-width: 100%;
+  }
+
+  .info-icon {
+    width: 14px;
+    height: 14px;
+    margin-right: 4px;
+  }
+
+  /* MCP区域移动端优化 */
+  .mcp-access-point {
+    padding: 16px 20px;
+  }
+
+  .mcp-header {
+    .bold-title {
+      font-size: 16px;
+      margin: 0 0 16px 0;
+    }
+  }
+
+  .mcp-container {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .url-header {
+    .address-desc {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      font-size: 12px;
+
+      .doc-link {
+        margin-left: 0;
+      }
+    }
+  }
+
+  .url-input {
+    height: 40px;
+    font-size: 12px;
+
+    ::v-deep .el-input__inner {
+      padding-right: 70px;
+      font-size: 12px;
+    }
+
+    ::v-deep .el-input__suffix {
+      .inner-copy-btn {
+        padding: 4px 6px;
+        font-size: 12px;
+      }
+    }
+  }
+
+  .status-container {
+    flex-wrap: wrap;
+    gap: 8px;
+
+    .status-text {
+      font-size: 12px;
+    }
+
+    .refresh-btn {
+      padding: 4px 8px;
+      font-size: 12px;
+
+      .refresh-icon {
+        font-size: 12px;
+      }
+    }
+  }
+
+  .mcp-tools-list {
+    .tool-btn {
+      padding: 4px 8px;
+      font-size: 11px;
+    }
+
+    .no-tools {
+      font-size: 12px;
+      padding: 8px 0;
+    }
+  }
+
+  /* 底部按钮区域优化 */
+  .drawer-footer {
+    padding: 12px 20px;
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+
+    .el-button {
+      flex: 1;
+      height: 36px;
+      font-size: 14px;
+    }
+  }
+
+  /* 空状态优化 */
+  ::v-deep .el-empty {
+    padding: 20px 0;
+
+    .el-empty__description {
+      font-size: 12px;
+    }
+  }
+
+  .empty-tip {
+    padding: 16px;
+    font-size: 12px;
+  }
+}
 </style>

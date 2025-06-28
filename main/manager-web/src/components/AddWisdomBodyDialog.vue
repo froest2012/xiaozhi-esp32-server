@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :visible="visible" @close="handleClose"  width="25%" center @open="handleOpen">
+  <el-dialog :visible="visible" @close="handleClose" :width="isMobile ? '80%' : '25%'" center @open="handleOpen">
     <div
       style="margin: 0 10px 10px;display: flex;align-items: center;gap: 10px;font-weight: 700;font-size: 20px;text-align: left;color: #3d4566;">
       <div
@@ -30,6 +30,7 @@
 
 <script>
 import Api from '@/apis/api';
+import { isMobileDevice } from '@/utils';
 
 export default {
   name: 'AddWisdomBodyDialog',
@@ -39,10 +40,21 @@ export default {
   data() {
     return {
       wisdomBodyName: "",
-      inputRef: null
+      inputRef: null,
+      isMobile: false
     }
   },
+  mounted() {
+    this.checkDeviceType();
+    window.addEventListener('resize', this.checkDeviceType);
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.checkDeviceType);
+  },
   methods: {
+    checkDeviceType() {
+      this.isMobile = isMobileDevice();
+    },
     handleOpen() {
       this.$nextTick(() => {
         this.$refs.inputRef.focus();
@@ -109,5 +121,22 @@ export default {
 
 ::v-deep .el-dialog__header {
   padding: 10px;
+}
+
+/* 移动端适配样式 */
+@media screen and (max-width: 768px) {
+  ::v-deep .el-dialog {
+    width: 80% !important;
+    margin-top: 20vh !important;
+  }
+
+  ::v-deep .el-dialog__body {
+    padding: 10px;
+  }
+
+  .dialog-btn {
+    height: 36px;
+    line-height: 36px;
+  }
 }
 </style>

@@ -797,4 +797,211 @@ export default {
   height: 32px;
   margin-left: 8px;
 }
+
+/* 移动端适配样式 */
+@media screen and (max-width: 768px) {
+  .welcome {
+    min-width: 100%;
+    overflow-y: auto;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .operation-bar {
+    padding: 1vh 16px;
+  }
+
+  .page-title {
+    font-size: 20px;
+  }
+
+  .main-wrapper {
+    margin: 1vh 16px;
+    height: auto;
+    min-height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .content-panel {
+    height: auto;
+    overflow: visible;
+  }
+
+  .content-area {
+    min-width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .config-card {
+    overflow: visible;
+  }
+
+  .config-header {
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 16px;
+    padding-bottom: 12px;
+  }
+
+  .header-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .header-icon img {
+    width: 16px;
+    height: 16px;
+  }
+
+  .header-actions {
+    width: 100%;
+    margin-top: 8px;
+    margin-left: 0;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .header-actions .hint-text {
+    display: none; /* 移动端隐藏提示文字 */
+  }
+
+  .header-actions .save-btn,
+  .header-actions .reset-btn {
+    flex: 1;
+    min-width: 80px;
+    font-size: 12px;
+    padding: 6px 12px;
+    height: 28px;
+  }
+
+  .header-actions .custom-close-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 20px;
+    margin-left: 6px;
+  }
+
+  .form-content {
+    padding: 12px 0;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .form-column {
+    gap: 8px;
+  }
+
+  .template-container {
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+
+  .template-item {
+    height: 30px;
+    width: 68px;
+    line-height: 30px;
+    font-size: 10px;
+    border-radius: 6px;
+  }
+
+  .model-row {
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .model-row .model-item {
+    margin-bottom: 8px;
+  }
+
+  .model-select-wrapper {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .function-icons {
+    margin-left: 0;
+    padding-left: 0;
+    flex-wrap: wrap;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .icon-dot {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+    margin-right: 4px;
+  }
+
+  .edit-function-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+    border-radius: 14px;
+  }
+
+  .chat-history-options {
+    min-width: 100%;
+    justify-content: flex-start;
+  }
+
+  .chat-history-options .el-radio-button {
+    font-size: 12px;
+  }
+
+  /* 优化表单项间距 */
+  ::v-deep .el-form-item {
+    margin-bottom: 12px;
+  }
+
+  ::v-deep .el-form-item__label {
+    font-size: 11px !important;
+    line-height: 18px;
+    padding-bottom: 4px;
+  }
+
+  ::v-deep .el-input__inner {
+    font-size: 14px;
+    height: 36px;
+  }
+
+  /* 优化文本域高度 */
+  ::v-deep .el-textarea__inner {
+    font-size: 14px;
+    padding: 8px;
+    min-height: 80px !important;
+  }
+
+  /* 角色介绍文本域特殊处理 */
+  ::v-deep .el-textarea[rows="9"] .el-textarea__inner {
+    min-height: 120px !important;
+  }
+
+  /* 记忆文本域特殊处理 */
+  ::v-deep .el-textarea[rows="6"] .el-textarea__inner {
+    min-height: 100px !important;
+  }
+
+  ::v-deep .el-select .el-input__inner {
+    height: 36px;
+  }
+
+  ::v-deep .el-radio-button__inner {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  /* 确保字数统计显示正常 */
+  ::v-deep .el-textarea .el-input__count {
+    font-size: 11px;
+    right: 8px;
+    bottom: 4px;
+  }
+}
 </style>

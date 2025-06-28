@@ -1,6 +1,6 @@
 <template>
   <form>
-    <el-dialog :visible.sync="dialogVisible"  width="24%" center>
+    <el-dialog :visible.sync="dialogVisible" :width="isMobile ? '85%' : '24%'" center>
       <div
         style="margin: 0 10px 10px;display: flex;align-items: center;gap: 10px;font-weight: 700;font-size: 20px;text-align: left;color: #3d4566;">
         <div
@@ -49,6 +49,7 @@
 <script>
 import userApi from '@/apis/module/user';
 import { mapActions } from 'vuex';
+import { isMobileDevice } from '@/utils';
 
 export default {
   name: 'ChangePasswordDialog',
@@ -63,8 +64,16 @@ export default {
       dialogVisible: this.value,
       oldPassword: "",
       newPassword: "",
-      confirmNewPassword: ""
+      confirmNewPassword: "",
+      isMobile: false
     }
+  },
+  mounted() {
+    this.checkDeviceType();
+    window.addEventListener('resize', this.checkDeviceType);
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.checkDeviceType);
   },
   watch: {
     value(val) {
@@ -76,6 +85,9 @@ export default {
   },
   methods: {
     ...mapActions(['logout']), // 引入Vuex的logout action
+    checkDeviceType() {
+      this.isMobile = isMobileDevice();
+    },
     confirm() {
       if (!this.oldPassword.trim() || !this.newPassword.trim() || !this.confirmNewPassword.trim()) {
         this.$message.error('请填写所有字段');
@@ -156,5 +168,22 @@ export default {
 
 ::v-deep .el-dialog__header {
   padding: 10px;
+}
+
+/* 移动端适配样式 */
+@media screen and (max-width: 768px) {
+  ::v-deep .el-dialog {
+    width: 85% !important;
+    margin-top: 15vh !important;
+  }
+
+  ::v-deep .el-dialog__body {
+    padding: 10px;
+  }
+
+  .dialog-btn {
+    height: 36px;
+    line-height: 36px;
+  }
 }
 </style>
