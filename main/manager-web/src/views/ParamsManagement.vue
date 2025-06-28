@@ -2,61 +2,75 @@
     <div class="welcome">
         <HeaderBar />
 
-        <div class="operation-bar">
+        <div :class="['operation-bar', { 'mobile-operation-bar': isMobile }]">
             <h2 class="page-title">参数管理</h2>
-            <div class="right-operations">
+            <div class="right-operations" v-if="!isMobile">
                 <el-input placeholder="请输入参数编码或备注查询" v-model="searchCode" class="search-input"
                     @keyup.enter.native="handleSearch" clearable />
                 <el-button class="btn-search" @click="handleSearch">搜索</el-button>
             </div>
         </div>
 
+        <!-- 移动端搜索框 -->
+        <div v-if="isMobile" class="mobile-search-container">
+            <el-input placeholder="请输入参数编码或备注查询" v-model="searchCode" class="mobile-search-input" clearable
+                @keyup.enter.native="handleSearch" size="small">
+                <template slot="suffix">
+                    <el-button class="search-btn" @click="handleSearch" type="text" size="mini">
+                        <i class="el-icon-search"></i>
+                    </el-button>
+                </template>
+            </el-input>
+        </div>
+
         <div class="main-wrapper">
             <div class="content-panel">
                 <div class="content-area">
-                    <el-card class="params-card" shadow="never">
-                        <el-table ref="paramsTable" :data="paramsList" class="transparent-table" v-loading="loading"
-                            element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading"
-                            element-loading-background="rgba(255, 255, 255, 0.7)"
-                            :header-cell-class-name="headerCellClassName">
-                            <el-table-column label="选择" align="center" width="120">
+                    <el-card :class="['params-card', { 'mobile-table': isMobile }]" shadow="never">
+                        <div class="table-container" :class="{ 'mobile-table': isMobile }">
+                            <el-table ref="paramsTable" :data="paramsList" :class="['transparent-table', { 'mobile-data-table': isMobile }]" v-loading="loading"
+                                element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading"
+                                element-loading-background="rgba(255, 255, 255, 0.7)"
+                                :header-cell-class-name="headerCellClassName">
+                            <el-table-column label="选择" align="center" :width="isMobile ? 50 : 120">
                                 <template slot-scope="scope">
-                                    <el-checkbox v-model="scope.row.selected"></el-checkbox>
+                                    <el-checkbox v-model="scope.row.selected" :class="{ 'mobile-checkbox': isMobile }"></el-checkbox>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="参数编码" prop="paramCode" align="center"></el-table-column>
-                            <el-table-column label="参数值" prop="paramValue" align="center" show-overflow-tooltip>
+                            <el-table-column label="参数编码" prop="paramCode" align="center" :width="isMobile ? 120 : undefined" :show-overflow-tooltip="isMobile"></el-table-column>
+                            <el-table-column label="参数值" prop="paramValue" align="center" :width="isMobile ? 120 : undefined" show-overflow-tooltip>
                                 <template slot-scope="scope">
                                     <div v-if="isSensitiveParam(scope.row.paramCode)">
                                         <span v-if="!scope.row.showValue">{{ maskSensitiveValue(scope.row.paramValue)
                                         }}</span>
                                         <span v-else>{{ scope.row.paramValue }}</span>
-                                        <el-button size="mini" type="text" @click="toggleSensitiveValue(scope.row)">
+                                        <el-button :size="isMobile ? 'mini' : 'mini'" type="text" @click="toggleSensitiveValue(scope.row)" :class="{ 'mobile-btn': isMobile }">
                                             {{ scope.row.showValue ? '隐藏' : '查看' }}
                                         </el-button>
                                     </div>
                                     <span v-else>{{ scope.row.paramValue }}</span>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="备注" prop="remark" align="center"></el-table-column>
-                            <el-table-column label="操作" align="center">
+                            <el-table-column label="备注" prop="remark" align="center" :width="isMobile ? 100 : undefined" show-overflow-tooltip></el-table-column>
+                            <el-table-column label="操作" align="center" :width="isMobile ? 100 : undefined">
                                 <template slot-scope="scope">
-                                    <el-button size="mini" type="text" @click="editParam(scope.row)">编辑</el-button>
-                                    <el-button size="mini" type="text" @click="deleteParam(scope.row)">删除</el-button>
+                                    <el-button :size="isMobile ? 'mini' : 'mini'" type="text" @click="editParam(scope.row)" :class="{ 'mobile-btn': isMobile }">编辑</el-button>
+                                    <el-button :size="isMobile ? 'mini' : 'mini'" type="text" @click="deleteParam(scope.row)" :class="{ 'mobile-btn': isMobile }">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
+                        </div>
 
-                        <div class="table_bottom">
-                            <div class="ctrl_btn">
-                                <el-button size="mini" type="primary" class="select-all-btn" @click="handleSelectAll">
+                        <div :class="['table_bottom', { 'mobile-footer': isMobile }]">
+                            <div :class="['ctrl_btn', { 'mobile-actions': isMobile }]">
+                                <el-button :size="isMobile ? 'mini' : 'mini'" type="primary" class="select-all-btn" @click="handleSelectAll">
                                     {{ isAllSelected ? '取消全选' : '全选' }}
                                 </el-button>
-                                <el-button size="mini" type="success" @click="showAddDialog">新增</el-button>
-                                <el-button size="mini" type="danger" icon="el-icon-delete"
+                                <el-button :size="isMobile ? 'mini' : 'mini'" type="success" @click="showAddDialog">新增</el-button>
+                                <el-button :size="isMobile ? 'mini' : 'mini'" type="danger" icon="el-icon-delete"
                                     @click="deleteSelectedParams">删除</el-button>
                             </div>
-                            <div class="custom-pagination">
+                            <div :class="['custom-pagination', { 'mobile-pagination': isMobile }]">
                                 <el-select v-model="pageSize" @change="handlePageSizeChange" class="page-size-select">
                                     <el-option v-for="item in pageSizeOptions" :key="item" :label="`${item}条/页`"
                                         :value="item">
@@ -75,7 +89,7 @@
                                 <button class="pagination-btn" :disabled="currentPage === pageCount" @click="goNext">
                                     下一页
                                 </button>
-                                <span class="total-text">共{{ total }}条记录</span>
+                                <span :class="['total-text', { 'mobile-total': isMobile }]">共{{ total }}条记录</span>
                             </div>
                         </div>
                     </el-card>
@@ -97,6 +111,7 @@ import Api from "@/apis/api";
 import HeaderBar from "@/components/HeaderBar.vue";
 import ParamDialog from "@/components/ParamDialog.vue";
 import VersionFooter from "@/components/VersionFooter.vue";
+import { isMobileDevice } from "@/utils/index";
 export default {
     components: { HeaderBar, ParamDialog, VersionFooter },
     data() {
@@ -126,12 +141,15 @@ export default {
     },
 
     computed: {
+        isMobile() {
+            return isMobileDevice();
+        },
         pageCount() {
             return Math.ceil(this.total / this.pageSize);
         },
         visiblePages() {
             const pages = [];
-            const maxVisible = 3;
+            const maxVisible = this.isMobile ? 2 : 3;
             let start = Math.max(1, this.currentPage - 1);
             let end = Math.min(this.pageCount, start + maxVisible - 1);
 
@@ -716,5 +734,163 @@ export default {
     color: #6b8cff !important;
     font-size: 14px;
     margin-top: 8px;
+}
+
+// 移动端适配样式
+@media screen and (max-width: 768px) {
+    .welcome {
+        min-width: unset;
+    }
+
+    .operation-bar.mobile-operation-bar {
+        padding: 12px 16px;
+    }
+
+    .page-title {
+        font-size: 20px;
+    }
+
+    // 移动端搜索样式（与其他页面一致）
+    .mobile-search-container {
+        margin: 0 16px 8px 16px;
+        width: calc(100% - 32px);
+    }
+
+    .mobile-search-input {
+        width: 100%;
+    }
+
+    .mobile-search-input ::v-deep .el-input__inner {
+        height: 32px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid #d9d9d9;
+        font-size: 12px;
+        padding-right: 40px;
+    }
+
+    .mobile-search-input ::v-deep .el-input__suffix {
+        right: 8px;
+        top: 0;
+        height: 32px;
+        display: flex;
+        align-items: center;
+    }
+
+    .search-btn {
+        background: transparent !important;
+        border: none !important;
+        color: #6b8cff !important;
+        padding: 4px !important;
+        margin: 0 !important;
+        height: 24px !important;
+        width: 24px !important;
+    }
+
+    .search-btn:hover {
+        background: rgba(107, 140, 255, 0.1) !important;
+        border-radius: 50% !important;
+    }
+
+    .search-btn i {
+        font-size: 16px;
+    }
+
+    .main-wrapper {
+        margin: 5px 12px;
+    }
+
+    .content-area {
+        min-width: unset;
+    }
+
+    .params-card.mobile-table {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .table-container.mobile-table {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 0 -16px;
+        padding: 0 16px;
+    }
+
+    .transparent-table.mobile-data-table {
+        min-width: 600px;
+        font-size: 11px;
+    }
+
+    .transparent-table.mobile-data-table ::v-deep .el-table__header th {
+        padding: 6px 4px;
+        font-size: 11px;
+    }
+
+    .transparent-table.mobile-data-table ::v-deep .el-table__body td {
+        padding: 4px 4px;
+        font-size: 11px;
+    }
+
+    .mobile-checkbox ::v-deep .el-checkbox__inner {
+        transform: scale(0.8);
+    }
+
+    .mobile-btn {
+        font-size: 10px;
+        margin: 0 2px;
+    }
+
+    .table_bottom.mobile-footer {
+        flex-direction: column;
+        gap: 8px;
+        align-items: center;
+        padding: 8px 0;
+        margin-top: 8px;
+    }
+
+    .ctrl_btn.mobile-actions {
+        justify-content: center;
+        width: 100%;
+        gap: 8px;
+    }
+
+    .ctrl_btn.mobile-actions .el-button {
+        min-width: 60px;
+        height: 28px;
+        font-size: 11px;
+        padding: 0 8px;
+    }
+
+    .custom-pagination.mobile-pagination {
+        flex-direction: row;
+        align-items: center;
+        gap: 4px;
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .custom-pagination.mobile-pagination .page-size-select {
+        width: 80px;
+        margin: 0;
+        order: -1;
+        margin-bottom: 4px;
+    }
+
+    .custom-pagination.mobile-pagination .pagination-btn {
+        min-width: 28px !important;
+        height: 26px !important;
+        padding: 0 6px !important;
+        font-size: 11px !important;
+        margin: 1px;
+    }
+
+    .custom-pagination.mobile-pagination .total-text.mobile-total {
+        width: 100%;
+        text-align: center;
+        margin: 4px 0 0 0;
+        font-size: 11px;
+        color: #666;
+    }
 }
 </style>

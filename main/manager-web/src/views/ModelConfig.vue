@@ -4,7 +4,7 @@
 
     <div class="operation-bar">
       <h2 class="page-title">{{ modelTypeText }}</h2>
-      <div class="action-group">
+      <div v-if="!isMobile" class="action-group">
         <div class="search-group">
           <el-input placeholder="请输入模型名称查询" v-model="search" class="search-input" clearable
             @keyup.enter.native="handleSearch" style="width: 240px" />
@@ -17,94 +17,112 @@
 
     <!-- 主体内容 -->
     <div class="main-wrapper">
-      <div class="content-panel">
+      <div class="content-panel" :class="{ 'mobile-layout': isMobile }">
         <!-- 左侧导航 -->
-        <el-menu :default-active="activeTab" class="nav-panel" @select="handleMenuSelect"
-          style="background-size: cover; background-position: center;">
-          <el-menu-item index="vad">
-            <span class="menu-text">语言活动检测</span>
-          </el-menu-item>
-          <el-menu-item index="asr">
-            <span class="menu-text">语音识别</span>
-          </el-menu-item>
-          <el-menu-item index="llm">
-            <span class="menu-text">大语言模型</span>
-          </el-menu-item>
-          <el-menu-item index="vllm">
-            <span class="menu-text">视觉大模型</span>
-          </el-menu-item>
-          <el-menu-item index="intent">
-            <span class="menu-text">意图识别</span>
-          </el-menu-item>
-          <el-menu-item index="tts">
-            <span class="menu-text">语音合成</span>
-          </el-menu-item>
-          <el-menu-item index="memory">
-            <span class="menu-text">记忆</span>
-          </el-menu-item>
-        </el-menu>
+        <div class="nav-container" :class="{ 'mobile-nav': isMobile }">
+          <!-- 移动端搜索框 -->
+          <div v-if="isMobile" class="mobile-search-container">
+            <el-input placeholder="搜索模型" v-model="search" class="mobile-search-input" clearable
+              @keyup.enter.native="handleSearch" size="small">
+              <template slot="suffix">
+                <el-button class="search-btn" @click="handleSearch" type="text" size="mini">
+                  <i class="el-icon-search"></i>
+                </el-button>
+              </template>
+            </el-input>
+          </div>
+
+          <el-menu :default-active="activeTab" :class="['nav-panel', { 'mobile-nav-panel': isMobile }]" @select="handleMenuSelect"
+            :mode="isMobile ? 'horizontal' : 'vertical'"
+            style="background-size: cover; background-position: center;">
+            <el-menu-item index="vad">
+              <span class="menu-text">{{ isMobile ? 'VAD' : '语言活动检测' }}</span>
+            </el-menu-item>
+            <el-menu-item index="asr">
+              <span class="menu-text">{{ isMobile ? 'ASR' : '语音识别' }}</span>
+            </el-menu-item>
+            <el-menu-item index="llm">
+              <span class="menu-text">{{ isMobile ? 'LLM' : '大语言模型' }}</span>
+            </el-menu-item>
+            <el-menu-item index="vllm">
+              <span class="menu-text">{{ isMobile ? 'VLLM' : '视觉大模型' }}</span>
+            </el-menu-item>
+            <el-menu-item index="intent">
+              <span class="menu-text">{{ isMobile ? 'Intent' : '意图识别' }}</span>
+            </el-menu-item>
+            <el-menu-item index="tts">
+              <span class="menu-text">{{ isMobile ? 'TTS' : '语音合成' }}</span>
+            </el-menu-item>
+            <el-menu-item index="memory">
+              <span class="menu-text">{{ isMobile ? 'Memory' : '记忆' }}</span>
+            </el-menu-item>
+          </el-menu>
+        </div>
 
         <!-- 右侧内容 -->
         <div class="content-area">
-          <el-card class="model-card" shadow="never">
-            <el-table ref="modelTable" style="width: 100%" v-loading="loading" element-loading-text="拼命加载中"
-              element-loading-spinner="el-icon-loading" element-loading-background="rgba(255, 255, 255, 0.7)"
-              :header-cell-style="{ background: 'transparent' }" :data="modelList" class="data-table"
-              header-row-class-name="table-header" :header-cell-class-name="headerCellClassName"
-              @selection-change="handleSelectionChange">
-              <el-table-column type="selection" width="55" align="center"></el-table-column>
-              <el-table-column label="模型ID" prop="id" align="center"></el-table-column>
-              <el-table-column label="模型名称" prop="modelName" align="center"></el-table-column>
-              <el-table-column label="提供商" align="center">
-                <template slot-scope="scope">
-                  {{ scope.row.configJson.type || '未知' }}
-                </template>
-              </el-table-column>
-              <el-table-column label="是否启用" align="center">
-                <template slot-scope="scope">
-                  <el-switch v-model="scope.row.isEnabled" class="custom-switch" :active-value="1" :inactive-value="0"
-                    @change="handleStatusChange(scope.row)" />
-                </template>
-              </el-table-column>
-              <el-table-column label="是否默认" align="center">
-                <template slot-scope="scope">
-                  <el-switch v-model="scope.row.isDefault" class="custom-switch" :active-value="1" :inactive-value="0"
-                    @change="handleDefaultChange(scope.row)" />
-                </template>
-              </el-table-column>
-              <el-table-column v-if="activeTab === 'tts'" label="音色管理" align="center">
-                <template slot-scope="scope">
-                  <el-button type="text" size="mini" @click="openTtsDialog(scope.row)" class="voice-management-btn">
-                    音色管理
-                  </el-button>
-                </template>
-              </el-table-column>
-              <el-table-column label="操作" align="center" width="150px">
-                <template slot-scope="scope">
-                  <el-button type="text" size="mini" @click="editModel(scope.row)" class="edit-btn">
-                    修改
-                  </el-button>
-                  <el-button type="text" size="mini" @click="deleteModel(scope.row)" class="delete-btn">
-                    删除
-                  </el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-            <div class="table-footer">
-              <div class="batch-actions">
-                <el-button size="mini" type="primary" @click="selectAll">
-                  {{ isAllSelected ?
-                    '取消全选' : '全选' }}
+          <el-card :class="['model-card', { 'mobile-table': isMobile }]" shadow="never">
+            <div class="table-container" :class="{ 'mobile-table': isMobile }">
+              <el-table ref="modelTable" style="width: 100%" v-loading="loading" element-loading-text="拼命加载中"
+                element-loading-spinner="el-icon-loading" element-loading-background="rgba(255, 255, 255, 0.7)"
+                :header-cell-style="{ background: 'transparent' }" :data="modelList" class="data-table"
+                header-row-class-name="table-header" :header-cell-class-name="headerCellClassName"
+                @selection-change="handleSelectionChange">
+                <el-table-column type="selection" :width="isMobile ? 40 : 55" align="center"></el-table-column>
+                <el-table-column label="模型ID" prop="id" align="center" :width="isMobile ? 120 : undefined" :show-overflow-tooltip="isMobile"></el-table-column>
+                <el-table-column label="模型名称" prop="modelName" align="center" :width="isMobile ? 100 : undefined" :show-overflow-tooltip="isMobile"></el-table-column>
+                <el-table-column label="提供商" align="center" :width="isMobile ? 80 : undefined">
+                  <template slot-scope="scope">
+                    {{ scope.row.configJson.type || '未知' }}
+                  </template>
+                </el-table-column>
+                <el-table-column label="启用" align="center" :width="isMobile ? 60 : undefined">
+                  <template slot-scope="scope">
+                    <el-switch v-model="scope.row.isEnabled" :class="['custom-switch', { 'mobile-switch': isMobile }]" :active-value="1" :inactive-value="0"
+                      @change="handleStatusChange(scope.row)" />
+                  </template>
+                </el-table-column>
+                <el-table-column label="默认" align="center" :width="isMobile ? 60 : undefined">
+                  <template slot-scope="scope">
+                    <el-switch v-model="scope.row.isDefault" :class="['custom-switch', { 'mobile-switch': isMobile }]" :active-value="1" :inactive-value="0"
+                      @change="handleDefaultChange(scope.row)" />
+                  </template>
+                </el-table-column>
+                <el-table-column v-if="activeTab === 'tts'" label="音色" align="center" :width="isMobile ? 60 : undefined">
+                  <template slot-scope="scope">
+                    <el-button type="text" :size="isMobile ? 'mini' : 'mini'" @click="openTtsDialog(scope.row)"
+                      :class="['voice-management-btn', { 'mobile-voice-btn': isMobile }]">
+                      {{ isMobile ? '音色' : '音色管理' }}
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column label="操作" align="center" :width="isMobile ? 80 : 150">
+                  <template slot-scope="scope">
+                    <el-button type="text" :size="isMobile ? 'mini' : 'mini'" @click="editModel(scope.row)"
+                      :class="['edit-btn', { 'mobile-btn': isMobile }]">
+                      修改
+                    </el-button>
+                    <el-button type="text" :size="isMobile ? 'mini' : 'mini'" @click="deleteModel(scope.row)"
+                      :class="['delete-btn', { 'mobile-btn': isMobile }]">
+                      删除
+                    </el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+            <div class="table-footer" :class="{ 'mobile-footer': isMobile }">
+              <div class="batch-actions" :class="{ 'mobile-actions': isMobile }">
+                <el-button :size="isMobile ? 'mini' : 'mini'" type="primary" @click="selectAll">
+                  {{ isAllSelected ? '取消全选' : '全选' }}
                 </el-button>
-                <el-button type="success" size="mini" @click="addModel" class="add-btn">
+                <el-button type="success" :size="isMobile ? 'mini' : 'mini'" @click="addModel" class="add-btn">
                   新增
                 </el-button>
-                <el-button size="mini" type="danger" icon="el-icon-delete" @click="batchDelete">
+                <el-button :size="isMobile ? 'mini' : 'mini'" type="danger" icon="el-icon-delete" @click="batchDelete">
                   删除
                 </el-button>
               </div>
-              <div class="custom-pagination">
-
+              <div class="custom-pagination" :class="{ 'mobile-pagination': isMobile }">
                 <el-select v-model="pageSize" @change="handlePageSizeChange" class="page-size-select">
                   <el-option v-for="item in pageSizeOptions" :key="item" :label="`${item}条/页`" :value="item">
                   </el-option>
@@ -119,7 +137,7 @@
                 </button>
 
                 <button class="pagination-btn" :disabled="currentPage === pageCount" @click="goNext">下一页</button>
-                <span class="total-text">共{{ total }}条记录</span>
+                <span class="total-text" :class="{ 'mobile-total': isMobile }">共{{ total }}条记录</span>
               </div>
             </div>
           </el-card>
@@ -144,6 +162,8 @@ import HeaderBar from "@/components/HeaderBar.vue";
 import ModelEditDialog from "@/components/ModelEditDialog.vue";
 import TtsModel from "@/components/TtsModel.vue";
 import VersionFooter from "@/components/VersionFooter.vue";
+import { isMobileDevice } from "@/utils/index";
+
 export default {
   components: { HeaderBar, ModelEditDialog, TtsModel, AddModelDialog, VersionFooter },
   data() {
@@ -171,6 +191,9 @@ export default {
   },
 
   computed: {
+    isMobile() {
+      return isMobileDevice();
+    },
     modelTypeText() {
       const map = {
         vad: '语言活动检测模型(VAD)',
@@ -501,7 +524,7 @@ export default {
   border: 1px solid #fff;
 }
 
-.nav-panel {
+.nav-container {
   min-width: 242px;
   height: 100%;
   border-right: 1px solid #ebeef5;
@@ -515,6 +538,12 @@ export default {
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
+}
+
+.nav-panel {
+  background: transparent;
+  border: none;
+  width: 100%;
 }
 
 .nav-panel .el-menu-item {
@@ -760,13 +789,10 @@ export default {
   color: #fff !important;
 }
 
-::v-deep .data-table {
-
-  &.el-table::before,
-  &.el-table::after,
-  &.el-table__inner-wrapper::before {
-    display: none !important;
-  }
+::v-deep .data-table.el-table::before,
+::v-deep .data-table.el-table::after,
+::v-deep .data-table.el-table__inner-wrapper::before {
+  display: none !important;
 }
 
 ::v-deep .data-table .el-table__header-wrapper {
@@ -834,65 +860,339 @@ export default {
   display: flex;
   align-items: center;
   gap: 8px;
+}
 
-  /* 导航按钮样式 (首页、上一页、下一页) */
-  .pagination-btn:first-child,
-  .pagination-btn:nth-child(2),
-  .pagination-btn:nth-child(3),
-  .pagination-btn:nth-last-child(2) {
+/* 导航按钮样式 (首页、上一页、下一页) */
+.custom-pagination .pagination-btn:first-child,
+.custom-pagination .pagination-btn:nth-child(2),
+.custom-pagination .pagination-btn:nth-child(3),
+.custom-pagination .pagination-btn:nth-last-child(2) {
+  min-width: 60px;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 4px;
+  border: 1px solid #e4e7ed;
+  background: #DEE7FF;
+  color: #606266;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.custom-pagination .pagination-btn:first-child:hover,
+.custom-pagination .pagination-btn:nth-child(2):hover,
+.custom-pagination .pagination-btn:nth-child(3):hover,
+.custom-pagination .pagination-btn:nth-last-child(2):hover {
+  background: #d7dce6;
+}
+
+.custom-pagination .pagination-btn:first-child:disabled,
+.custom-pagination .pagination-btn:nth-child(2):disabled,
+.custom-pagination .pagination-btn:nth-child(3):disabled,
+.custom-pagination .pagination-btn:nth-last-child(2):disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* 数字按钮样式 */
+.custom-pagination .pagination-btn:not(:first-child):not(:nth-child(2)):not(:nth-child(3)):not(:nth-last-child(2)) {
+  min-width: 28px;
+  height: 32px;
+  padding: 0;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #606266;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.custom-pagination .pagination-btn:not(:first-child):not(:nth-child(2)):not(:nth-child(3)):not(:nth-last-child(2)):hover {
+  background: rgba(245, 247, 250, 0.3);
+}
+
+.custom-pagination .pagination-btn.active {
+  background: #5f70f3 !important;
+  color: #ffffff !important;
+  border-color: #5f70f3 !important;
+}
+
+.custom-pagination .pagination-btn.active:hover {
+  background: #6d7cf5 !important;
+}
+
+.custom-pagination .total-text {
+  color: #909399;
+  font-size: 14px;
+  margin-left: 10px;
+}
+
+/* 移动端适配样式 */
+@media screen and (max-width: 768px) {
+  .welcome {
+    min-width: unset;
+    min-height: unset;
+  }
+
+  .main-wrapper {
+    margin: 5px 8px;
+    max-height: unset;
+    height: calc(100vh - 160px);
+  }
+
+  .operation-bar {
+    padding: 6px 16px;
+  }
+
+  .page-title {
+    font-size: 14px;
+    margin: 0;
+    text-align: center;
+  }
+
+  .action-group {
+    width: 100%;
+  }
+
+  .search-group {
+    flex-direction: row;
+    width: 100%;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .search-group .search-input {
+    flex: 1;
+  }
+
+  .btn-search {
+    width: 80px;
+    height: 36px;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  .content-panel.mobile-layout {
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .nav-container.mobile-nav {
+    min-width: unset;
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid #ebeef5;
+    padding: 8px 0;
+    background: rgba(237, 242, 255, 0.8);
+    overflow: hidden;
+  }
+
+  .mobile-search-container {
+    margin: 0 16px 8px 16px;
+    width: calc(100% - 32px);
+  }
+
+  .mobile-search-input {
+    width: 100%;
+  }
+
+  .mobile-search-input ::v-deep .el-input__inner {
+    height: 32px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #d9d9d9;
+    font-size: 12px;
+    padding-right: 40px;
+  }
+
+  .mobile-search-input ::v-deep .el-input__suffix {
+    right: 8px;
+    top: 0;
+    height: 32px;
+    display: flex;
+    align-items: center;
+  }
+
+  .search-btn {
+    background: transparent !important;
+    border: none !important;
+    color: #6b8cff !important;
+    padding: 4px !important;
+    margin: 0 !important;
+    height: 24px !important;
+    width: 24px !important;
+  }
+
+  .search-btn:hover {
+    background: rgba(107, 140, 255, 0.1) !important;
+    border-radius: 50% !important;
+  }
+
+  .search-btn i {
+    font-size: 16px;
+  }
+
+  .nav-panel.mobile-nav-panel {
+    height: auto;
+    overflow: hidden;
+    white-space: nowrap;
+    display: flex !important;
+    flex-direction: row !important;
+    background: transparent !important;
+    border: none !important;
+    width: 100%;
+    padding: 0 16px;
+    box-sizing: border-box;
+  }
+
+  .nav-panel.mobile-nav-panel .el-menu-item {
+    height: 36px;
+    line-height: 36px;
+    margin: 4px 3px;
+    padding: 0 8px !important;
+    border-radius: 18px !important;
+    min-width: 50px;
+    justify-content: center;
+    font-size: 11px;
+    flex: 1;
+    flex-shrink: 1;
+    display: inline-flex !important;
+    align-items: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .nav-panel.mobile-nav-panel .el-menu-item.is-active::before {
+    display: none;
+  }
+
+  .nav-panel.mobile-nav-panel.el-menu--horizontal {
+    border-bottom: none !important;
+  }
+
+  .nav-panel.mobile-nav-panel.el-menu--horizontal .el-menu-item {
+    border-bottom: none !important;
+    height: 36px !important;
+  }
+
+  .nav-panel.mobile-nav-panel.el-menu--horizontal .el-menu-item.is-active {
+    border-bottom: none !important;
+    background: #5778ff !important;
+    color: #fff !important;
+  }
+
+  .content-area {
+    min-width: unset;
+    padding: 12px;
+  }
+
+  .table-container.mobile-table {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 -16px;
+    padding: 0 16px;
+  }
+
+  .data-table {
+    min-width: 700px;
+    font-size: 11px;
+    max-height: calc(100vh - 280px);
+  }
+
+  .data-table ::v-deep .el-table__header th {
+    padding: 6px 4px;
+    font-size: 11px;
+  }
+
+  .data-table ::v-deep .el-table__body td {
+    padding: 4px 4px;
+    font-size: 11px;
+  }
+
+  .data-table ::v-deep .el-table__body-wrapper {
+    max-height: calc(100vh - 320px);
+    overflow-y: auto;
+  }
+
+  .table-footer.mobile-footer {
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    padding: 8px 0;
+  }
+
+  .batch-actions.mobile-actions {
+    justify-content: center;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .batch-actions.mobile-actions .el-button {
     min-width: 60px;
-    height: 32px;
-    padding: 0 12px;
-    border-radius: 4px;
-    border: 1px solid #e4e7ed;
-    background: #DEE7FF;
-    color: #606266;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-
-    &:hover {
-      background: #d7dce6;
-    }
-
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
+    height: 28px;
+    font-size: 11px;
+    padding: 0 8px;
   }
 
-  /* 数字按钮样式 */
-  .pagination-btn:not(:first-child):not(:nth-child(2)):not(:nth-child(3)):not(:nth-last-child(2)) {
-    min-width: 28px;
-    height: 32px;
-    padding: 0;
-    border-radius: 4px;
-    border: 1px solid transparent;
-    background: transparent;
-    color: #606266;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-
-    &:hover {
-      background: rgba(245, 247, 250, 0.3);
-    }
+  .custom-pagination.mobile-pagination {
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
   }
 
-  .pagination-btn.active {
-    background: #5f70f3 !important;
-    color: #ffffff !important;
-    border-color: #5f70f3 !important;
-
-    &:hover {
-      background: #6d7cf5 !important;
-    }
+  .custom-pagination.mobile-pagination .page-size-select {
+    width: 80px;
+    margin: 0;
+    order: -1;
+    margin-bottom: 4px;
   }
 
-  .total-text {
-    color: #909399;
-    font-size: 14px;
-    margin-left: 10px;
+  .custom-pagination.mobile-pagination .pagination-btn {
+    min-width: 28px !important;
+    height: 26px !important;
+    padding: 0 6px !important;
+    font-size: 11px !important;
+    margin: 1px;
+  }
+
+  .custom-pagination.mobile-pagination .total-text.mobile-total {
+    width: 100%;
+    text-align: center;
+    margin: 4px 0 0 0;
+    font-size: 11px;
+    color: #666;
+  }
+
+  .mobile-switch {
+    transform: scale(0.8);
+  }
+
+  .mobile-voice-btn {
+    font-size: 10px;
+    padding: 2px 6px;
+    min-width: 40px;
+  }
+
+  .mobile-btn {
+    font-size: 10px;
+    margin: 0 2px;
+  }
+
+  .model-card.mobile-table {
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .table-footer.mobile-footer {
+    background: rgba(247, 250, 255, 0.8);
+    border-radius: 0 0 12px 12px;
+    margin-top: 8px;
   }
 }
 

@@ -742,4 +742,225 @@ export default {
 ::v-deep .el-table::before {
   display: none !important;
 }
+
+/* 移动端适配样式 */
+@media screen and (max-width: 768px) {
+  .welcome {
+    min-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .operation-bar {
+    padding: 1vh 16px;
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .page-title {
+    font-size: 20px;
+    margin: 0;
+  }
+
+  .right-operations {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .search-input {
+    width: 100%;
+  }
+
+  .btn-search {
+    width: 100%;
+    height: 36px;
+    font-size: 14px;
+  }
+
+  .main-wrapper {
+    margin: 1vh 16px;
+    height: auto;
+    min-height: calc(100vh - 20vh);
+  }
+
+  .content-area {
+    min-width: 100%;
+    overflow-x: auto;
+  }
+
+  .device-card {
+    border-radius: 8px;
+  }
+
+  ::v-deep .el-card__body {
+    padding: 8px;
+  }
+
+  /* 表格移动端优化 */
+  :deep(.transparent-table) {
+    font-size: 12px;
+    max-height: calc(100vh - 35vh);
+  }
+
+  :deep(.transparent-table .el-table__header th) {
+    padding: 8px 4px;
+    font-size: 11px;
+  }
+
+  :deep(.transparent-table .el-table__body tr td) {
+    padding: 8px 4px;
+    font-size: 11px;
+  }
+
+  :deep(.transparent-table .el-table__header th .cell) {
+    padding: 0 2px;
+    line-height: 1.2;
+  }
+
+  :deep(.transparent-table .el-table__body tr td .cell) {
+    padding: 0 2px;
+    line-height: 1.2;
+  }
+
+  /* 表格列宽度调整 */
+  :deep(.transparent-table .el-table__header th:nth-child(1)) {
+    min-width: 50px;
+  }
+
+  :deep(.transparent-table .el-table__header th:nth-child(2)) {
+    min-width: 80px;
+  }
+
+  :deep(.transparent-table .el-table__header th:nth-child(3)) {
+    min-width: 70px;
+  }
+
+  :deep(.transparent-table .el-table__header th:nth-child(4)) {
+    min-width: 120px;
+  }
+
+  :deep(.transparent-table .el-table__header th:nth-child(5)) {
+    min-width: 90px;
+  }
+
+  :deep(.transparent-table .el-table__header th:nth-child(6)) {
+    min-width: 90px;
+  }
+
+  :deep(.transparent-table .el-table__header th:nth-child(7)) {
+    min-width: 80px;
+  }
+
+  :deep(.transparent-table .el-table__header th:nth-child(8)) {
+    min-width: 70px;
+  }
+
+  :deep(.transparent-table .el-table__header th:nth-child(9)) {
+    min-width: 60px;
+  }
+
+  /* 表格内容优化 */
+  :deep(.el-button--mini) {
+    padding: 2px 6px;
+    font-size: 10px;
+    height: 24px;
+  }
+
+  :deep(.el-switch--mini) {
+    transform: scale(0.8);
+  }
+
+  :deep(.el-input--mini .el-input__inner) {
+    height: 24px;
+    font-size: 10px;
+  }
+
+  /* 底部操作区域优化 */
+  .table_bottom {
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 8px;
+    padding: 8px 0;
+  }
+
+  .ctrl_btn {
+    justify-content: center;
+    padding-left: 0;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .ctrl_btn .el-button {
+    min-width: 60px;
+    height: 28px;
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+
+  /* 分页控件优化 */
+  .custom-pagination {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .page-size-select {
+    width: 80px;
+    margin-right: 4px;
+  }
+
+  .page-size-select .el-input__inner {
+    height: 28px;
+    font-size: 11px;
+  }
+
+  .custom-pagination .pagination-btn {
+    min-width: 24px;
+    height: 28px;
+    padding: 0 6px;
+    font-size: 11px;
+  }
+
+  .custom-pagination .pagination-btn:first-child,
+  .custom-pagination .pagination-btn:nth-child(2),
+  .custom-pagination .pagination-btn:nth-last-child(2) {
+    min-width: 50px;
+    padding: 0 8px;
+  }
+
+  .custom-pagination .total-text {
+    font-size: 11px;
+    margin-left: 6px;
+    order: 1;
+    width: 100%;
+    text-align: center;
+    margin-top: 4px;
+  }
+
+  /* 备注编辑优化 */
+  .remark-view {
+    font-size: 11px;
+  }
+
+  .remark-view .el-icon-edit {
+    font-size: 12px;
+    margin-right: 2px;
+  }
+
+  /* 加载状态优化 */
+  :deep(.el-loading-text) {
+    font-size: 12px;
+  }
+
+  /* 空状态优化 */
+  :deep(.el-empty) {
+    padding: 20px 0;
+  }
+
+  :deep(.el-empty__description) {
+    font-size: 12px;
+  }
+}
 </style>
