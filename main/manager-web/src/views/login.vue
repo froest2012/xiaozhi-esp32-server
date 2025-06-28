@@ -7,12 +7,12 @@
           <img loading="lazy" alt="" src="@/assets/xiaozhi-ai.png" style="height: 18px;" />
         </div>
       </el-header>
-      <div class="login-person">
+      <div class="login-person" :class="{'mobile': isMobile}">
         <img loading="lazy" alt="" src="@/assets/login/login-person.png" style="width: 100%;" />
       </div>
       <el-main style="position: relative;">
         <div class="login-box" @keyup.enter="login">
-          <div style="display: flex;align-items: center;gap: 20px;margin-bottom: 39px;padding: 0 30px;">
+          <div style="display: flex;align-items: center;gap: 20px;margin-bottom: 30px;padding: 0 30px;">
             <img loading="lazy" alt="" src="@/assets/login/hi.png" style="width: 34px;height: 34px;" />
             <div class="login-text">登录</div>
             <div class="login-welcome">
@@ -31,9 +31,9 @@
             <!-- 手机号登录 -->
             <template v-else>
               <div class="input-box">
-                <div style="display: flex; align-items: center; width: 100%;">
-                  <el-select v-model="form.areaCode" style="width: 220px; margin-right: 10px;">
-                    <el-option v-for="item in mobileAreaList" :key="item.key" :label="`${item.name} (${item.key})`"
+                <div style="display: flex; align-items: center; width: 100%;" :class="{'mobile-flex': isMobile}">
+                  <el-select v-model="form.areaCode" :style="isMobile ? 'width: 120px; margin-right: 5px;' : 'width: 220px; margin-right: 10px;'">
+                    <el-option v-for="item in mobileAreaList" :key="item.key" :label="isMobile ? item.key : `${item.name} (${item.key})`"
                       :value="item.key" />
                   </el-select>
                   <el-input v-model="form.mobile" placeholder="请输入手机号码" />
@@ -45,13 +45,13 @@
               <img loading="lazy" alt="" class="input-icon" src="@/assets/login/password.png" />
               <el-input v-model="form.password" placeholder="请输入密码" type="password" />
             </div>
-            <div style="display: flex; align-items: center; margin-top: 20px; width: 100%; gap: 10px;">
-              <div class="input-box" style="width: calc(100% - 130px); margin-top: 0;">
+            <div style="display: flex; align-items: center; margin-top: 20px; width: 100%; gap: 10px;" :class="{'mobile-captcha': isMobile}">
+              <div class="input-box" :style="isMobile ? 'width: calc(100% - 100px); margin-top: 0;' : 'width: calc(100% - 130px); margin-top: 0;'">
                 <img loading="lazy" alt="" class="input-icon" src="@/assets/login/shield.png" />
                 <el-input v-model="form.captcha" placeholder="请输入验证码" style="flex: 1;" />
               </div>
               <img loading="lazy" v-if="captchaUrl" :src="captchaUrl" alt="验证码"
-                style="width: 150px; height: 40px; cursor: pointer;" @click="fetchCaptcha" />
+                :style="isMobile ? 'width: 100px; height: 38px; cursor: pointer;' : 'width: 150px; height: 40px; cursor: pointer;'" @click="fetchCaptcha" />
             </div>
             <div
               style="font-weight: 400;font-size: 14px;text-align: left;color: #5778ff;display: flex;justify-content: space-between;margin-top: 20px;">
@@ -73,7 +73,7 @@
             </el-tooltip>
           </div>
 
-          <div style="font-size: 14px;color: #979db1;">
+          <div style="font-size: 14px;color: #979db1;margin-top: 10px;">
             登录即同意
             <div style="display: inline-block;color: #5778FF;cursor: pointer;">《用户协议》</div>
             和
@@ -91,7 +91,7 @@
 <script>
 import Api from '@/apis/api';
 import VersionFooter from '@/components/VersionFooter.vue';
-import { getUUID, goToPage, showDanger, showSuccess, validateMobile } from '@/utils';
+import { getUUID, goToPage, showDanger, showSuccess, validateMobile, isMobileDevice } from '@/utils';
 import { mapState } from 'vuex';
 
 export default {
@@ -104,7 +104,10 @@ export default {
       allowUserRegister: state => state.pubConfig.allowUserRegister,
       enableMobileRegister: state => state.pubConfig.enableMobileRegister,
       mobileAreaList: state => state.pubConfig.mobileAreaList
-    })
+    }),
+    isMobile() {
+      return this.mobileDeviceDetected;
+    }
   },
   data() {
     return {
@@ -119,17 +122,28 @@ export default {
       },
       captchaUuid: '',
       captchaUrl: '',
-      isMobileLogin: false
+      isMobileLogin: false,
+      mobileDeviceDetected: false
     }
   },
   mounted() {
     this.fetchCaptcha();
+    this.mobileDeviceDetected = isMobileDevice();
     this.$store.dispatch('fetchPubConfig').then(() => {
       // 根据配置决定默认登录方式
       this.isMobileLogin = this.enableMobileRegister;
     });
+    // 监听窗口大小变化，重新检测设备类型
+    window.addEventListener('resize', this.checkDeviceType);
+  },
+  beforeDestroy() {
+    // 移除事件监听器
+    window.removeEventListener('resize', this.checkDeviceType);
   },
   methods: {
+    checkDeviceType() {
+      this.mobileDeviceDetected = isMobileDevice();
+    },
     fetchCaptcha() {
       if (this.$store.getters.getToken) {
         if (this.$route.path !== '/home') {
@@ -241,6 +255,52 @@ export default {
   &:active {
     background-color: #3d5cd6;
     border-color: #3d5cd6;
+  }
+}
+
+/* 移动端特定样式 */
+.mobile-flex {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.mobile-captcha {
+  flex-direction: column;
+  align-items: center;
+}
+
+@media screen and (max-width: 768px) {
+  .el-select {
+    width: 100% !important;
+    margin-right: 0 !important;
+    margin-bottom: 10px;
+  }
+
+  /* 优化移动端布局 */
+  .el-header {
+    padding: 10px 0;
+    height: auto !important;
+  }
+
+  .el-main {
+    padding: 10px;
+  }
+
+  .el-footer {
+    padding: 10px 0;
+    height: auto !important;
+  }
+
+  /* 优化表单内容对齐 */
+  :deep(.el-input__inner) {
+    height: 38px;
+    line-height: 38px;
+  }
+
+  .input-icon {
+    width: 16px;
+    height: 16px;
   }
 }
 </style>

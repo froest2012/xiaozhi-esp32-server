@@ -1,6 +1,21 @@
 <template>
   <el-header class="header">
     <div class="header-container">
+      <!-- 移动端用户信息 - 右上角 -->
+      <div v-if="isMobile" class="mobile-user-info">
+        <img loading="lazy" alt="" src="@/assets/home/avatar.png" class="mobile-avatar-img" />
+        <el-dropdown trigger="click" class="mobile-user-dropdown" @visible-change="handleUserDropdownVisibleChange">
+          <span class="mobile-dropdown-link">
+            {{ userInfo.username || '加载中...' }}
+            <i class="el-icon-arrow-down el-icon--right" :class="{ 'rotate-down': userDropdownVisible }"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item @click.native="showChangePasswordDialog">修改密码</el-dropdown-item>
+            <el-dropdown-item @click.native="handleLogout">退出登录</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
+
       <!-- 左侧元素 -->
       <div class="header-left" @click="goHome">
         <img loading="lazy" alt="" src="@/assets/xiaozhi-logo.png" class="logo-img" />
@@ -61,7 +76,7 @@
       </div>
 
       <!-- 右侧元素 -->
-      <div class="header-right">
+      <div class="header-right" v-if="!isMobile">
         <div class="search-container" v-if="$route.path === '/home' && !(isSuperAdmin && isSmallScreen)">
           <el-input v-model="search" placeholder="输入名称搜索.." class="custom-search-input"
             @keyup.enter.native="handleSearch">
@@ -91,6 +106,7 @@
 import userApi from '@/apis/module/user';
 import { mapActions, mapGetters } from 'vuex';
 import ChangePasswordDialog from './ChangePasswordDialog.vue'; // 引入修改密码弹窗组件
+import { isMobileDevice } from '@/utils/index';
 
 export default {
   name: 'HeaderBar',
@@ -115,6 +131,9 @@ export default {
     ...mapGetters(['getIsSuperAdmin']),
     isSuperAdmin() {
       return this.getIsSuperAdmin;
+    },
+    isMobile() {
+      return isMobileDevice();
     }
   },
   mounted() {
@@ -268,7 +287,7 @@ export default {
 .header-right {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 5px;
   min-width: 300px;
   justify-content: flex-end;
 }
@@ -393,5 +412,90 @@ export default {
   font-size: 14px;
   color: #606266;
   white-space: nowrap;
+}
+
+/* 移动端适配样式 */
+@media screen and (max-width: 768px) {
+  .header {
+    min-width: unset;
+    height: auto !important;
+    padding: 5px 0;
+    position: relative;
+  }
+
+  .header-container {
+    flex-direction: column;
+    padding: 5px;
+    position: relative;
+  }
+
+  // 移动端用户信息 - 右上角
+  .mobile-user-info {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 4px 8px;
+    border-radius: 15px;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .mobile-avatar-img {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  .mobile-user-dropdown {
+    flex-shrink: 0;
+  }
+
+  .mobile-dropdown-link {
+    font-size: 12px;
+    color: #606266;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+  }
+
+  .mobile-dropdown-link:hover {
+    color: #5778ff;
+  }
+
+  .header-left {
+    margin-bottom: 10px;
+    width: 100%;
+    justify-content: center;
+    margin-top: 5px;
+  }
+
+  .header-center {
+    position: relative;
+    left: 0;
+    transform: none;
+    width: 100%;
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding-bottom: 5px;
+    gap: 10px;
+  }
+
+  .equipment-management {
+    padding: 0 10px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .search-container {
+    width: 100%;
+    max-width: unset;
+    margin-right: 0;
+  }
 }
 </style>

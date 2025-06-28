@@ -8,7 +8,7 @@
           <img loading="lazy" alt="" src="@/assets/xiaozhi-ai.png" style="height: 18px;" />
         </div>
       </el-header>
-      <div class="login-person">
+      <div class="login-person" :class="{'mobile': isMobile}">
         <img loading="lazy" alt="" src="@/assets/login/register-person.png" style="width: 100%;" />
       </div>
       <el-main style="position: relative;">
@@ -33,28 +33,27 @@
               <!-- 手机号注册部分 -->
               <template v-if="enableMobileRegister">
                 <div class="input-box">
-                  <div style="display: flex; align-items: center; width: 100%;">
-                    <el-select v-model="form.areaCode" style="width: 220px; margin-right: 10px;">
-                      <el-option v-for="item in mobileAreaList" :key="item.key" :label="`${item.name} (${item.key})`"
+                  <div style="display: flex; align-items: center; width: 100%;" :class="{'mobile-flex': isMobile}">
+                    <el-select v-model="form.areaCode" :style="isMobile ? 'width: 120px; margin-right: 5px;' : 'width: 220px; margin-right: 10px;'">
+                      <el-option v-for="item in mobileAreaList" :key="item.key" :label="isMobile ? item.key : `${item.name} (${item.key})`"
                         :value="item.key" />
                     </el-select>
                     <el-input v-model="form.mobile" placeholder="请输入手机号码" />
                   </div>
                 </div>
 
-                <div style="display: flex; align-items: center; margin-top: 20px; width: 100%; gap: 10px;">
-                  <div class="input-box" style="width: calc(100% - 130px); margin-top: 0;">
+                <div style="display: flex; align-items: center; margin-top: 20px; width: 100%; gap: 10px;" :class="{'mobile-captcha': isMobile}">
+                  <div class="input-box" :style="isMobile ? 'width: calc(100% - 100px); margin-top: 0;' : 'width: calc(100% - 130px); margin-top: 0;'">
                     <img loading="lazy" alt="" class="input-icon" src="@/assets/login/shield.png" />
                     <el-input v-model="form.captcha" placeholder="请输入验证码" style="flex: 1;" />
                   </div>
                   <img loading="lazy" v-if="captchaUrl" :src="captchaUrl" alt="验证码"
-                    style="width: 150px; height: 40px; cursor: pointer;" @click="fetchCaptcha" />
+                    :style="isMobile ? 'width: 100px; height: 38px; cursor: pointer;' : 'width: 150px; height: 40px; cursor: pointer;'" @click="fetchCaptcha" />
                 </div>
 
                 <!-- 手机验证码 -->
-
-                <div style="display: flex; align-items: center; margin-top: 20px; width: 100%; gap: 10px;">
-                  <div class="input-box" style="width: calc(100% - 130px); margin-top: 0;">
+                <div style="display: flex; align-items: center; margin-top: 20px; width: 100%; gap: 10px;" :class="{'mobile-captcha': isMobile}">
+                  <div class="input-box" :style="isMobile ? 'width: calc(100% - 100px); margin-top: 0;' : 'width: calc(100% - 130px); margin-top: 0;'">
                     <img loading="lazy" alt="" class="input-icon" src="@/assets/login/phone.png" />
                     <el-input v-model="form.mobileCaptcha" placeholder="请输入手机验证码" style="flex: 1;" maxlength="6" />
                   </div>
@@ -81,13 +80,13 @@
 
               <!-- 验证码部分保持相同 -->
               <div v-if="!enableMobileRegister"
-                style="display: flex; align-items: center; margin-top: 20px; width: 100%; gap: 10px;">
-                <div class="input-box" style="width: calc(100% - 130px); margin-top: 0;">
+                style="display: flex; align-items: center; margin-top: 20px; width: 100%; gap: 10px;" :class="{'mobile-captcha': isMobile}">
+                <div class="input-box" :style="isMobile ? 'width: calc(100% - 100px); margin-top: 0;' : 'width: calc(100% - 130px); margin-top: 0;'">
                   <img loading="lazy" alt="" class="input-icon" src="@/assets/login/shield.png" />
                   <el-input v-model="form.captcha" placeholder="请输入验证码" style="flex: 1;" />
                 </div>
                 <img loading="lazy" v-if="captchaUrl" :src="captchaUrl" alt="验证码"
-                  style="width: 150px; height: 40px; cursor: pointer;" @click="fetchCaptcha" />
+                  :style="isMobile ? 'width: 100px; height: 38px; cursor: pointer;' : 'width: 150px; height: 40px; cursor: pointer;'" @click="fetchCaptcha" />
               </div>
 
               <!-- 修改底部链接 -->
@@ -121,7 +120,7 @@
 <script>
 import Api from '@/apis/api';
 import VersionFooter from '@/components/VersionFooter.vue';
-import { getUUID, goToPage, showDanger, showSuccess, validateMobile } from '@/utils';
+import { getUUID, goToPage, showDanger, showSuccess, validateMobile, isMobileDevice } from '@/utils';
 import { mapState } from 'vuex';
 
 export default {
@@ -137,6 +136,9 @@ export default {
     }),
     canSendMobileCaptcha() {
       return this.countdown === 0 && validateMobile(this.form.mobile, this.form.areaCode);
+    },
+    isMobile() {
+      return this.mobileDeviceDetected;
     }
   },
   data() {
@@ -153,7 +155,8 @@ export default {
       },
       captchaUrl: '',
       countdown: 0,
-      timer: null
+      timer: null,
+      mobileDeviceDetected: false
     }
   },
   mounted() {
@@ -166,8 +169,23 @@ export default {
       }
     });
     this.fetchCaptcha();
+    this.mobileDeviceDetected = isMobileDevice();
+    // 监听窗口大小变化，重新检测设备类型
+    window.addEventListener('resize', this.checkDeviceType);
+  },
+  beforeDestroy() {
+    // 移除事件监听器
+    window.removeEventListener('resize', this.checkDeviceType);
+    // 清除定时器
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
   },
   methods: {
+    checkDeviceType() {
+      this.mobileDeviceDetected = isMobileDevice();
+    },
     // 复用验证码获取方法
     fetchCaptcha() {
       this.form.captchaId = getUUID();
@@ -255,41 +273,48 @@ export default {
         }
       }
 
-      // 验证密码
+      // 密码验证
       if (!this.validateInput(this.form.password, '密码不能为空')) {
         return;
       }
+
       if (this.form.password !== this.form.confirmPassword) {
-        showDanger('两次输入的密码不一致')
-        return
+        showDanger('两次输入的密码不一致');
+        return;
       }
-      // 验证验证码
+
+      // 验证码验证
       if (!this.validateInput(this.form.captcha, '验证码不能为空')) {
         return;
       }
 
+      // 构建注册请求参数
+      const registerParams = {
+        username: this.enableMobileRegister ? this.form.areaCode + this.form.mobile : this.form.username,
+        password: this.form.password,
+        captcha: this.form.captcha,
+        captchaId: this.form.captchaId
+      };
+
+      // 如果是手机注册，添加手机验证码
       if (this.enableMobileRegister) {
-        this.form.username = this.form.areaCode + this.form.mobile
+        registerParams.smsCode = this.form.mobileCaptcha;
       }
 
-      Api.user.register(this.form, ({ data }) => {
-        showSuccess('注册成功！')
-        goToPage('/login')
+      // 发送注册请求
+      Api.user.register(registerParams, () => {
+        showSuccess('注册成功，请登录');
+        setTimeout(() => {
+          goToPage('/login');
+        }, 1500);
       }, (err) => {
-        showDanger(err.data.msg || '注册失败')
-        if (err.data != null && err.data.msg != null && err.data.msg.indexOf('图形验证码') > -1) {
-          this.fetchCaptcha()
-        }
-      })
+        showDanger(err.data.msg || '注册失败');
+        this.fetchCaptcha();
+      });
     },
 
     goToLogin() {
-      goToPage('/login')
-    }
-  },
-  beforeDestroy() {
-    if (this.timer) {
-      clearInterval(this.timer);
+      goToPage('/login');
     }
   }
 }
@@ -299,19 +324,80 @@ export default {
 @import './auth.scss';
 
 .send-captcha-btn {
-  margin-right: -5px;
-  min-width: 100px;
-  height: 40px;
-  line-height: 40px;
-  border-radius: 4px;
-  font-size: 14px;
-  background: rgb(87, 120, 255);
-  border: none;
-  padding: 0px;
+  height: 38px;
+  width: 120px;
+  padding: 0;
+  background-color: #5778ff;
+  border-color: #5778ff;
+  color: white;
+
+  &:hover,
+  &:focus {
+    background-color: #4a6ae8;
+    border-color: #4a6ae8;
+  }
+
+  &:active {
+    background-color: #3d5cd6;
+    border-color: #3d5cd6;
+  }
 
   &:disabled {
-    background: #c0c4cc;
-    cursor: not-allowed;
+    background-color: #a0aec0;
+    border-color: #a0aec0;
+  }
+}
+
+/* 移动端特定样式 */
+.mobile-flex {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.mobile-captcha {
+  flex-direction: column;
+  align-items: center;
+}
+
+@media screen and (max-width: 768px) {
+  .el-select {
+    width: 100% !important;
+    margin-right: 0 !important;
+    margin-bottom: 10px;
+  }
+
+  .send-captcha-btn {
+    width: 100px;
+    font-size: 12px;
+    height: 38px;
+    line-height: 38px;
+  }
+
+  /* 优化移动端布局 */
+  .el-header {
+    padding: 10px 0;
+    height: auto !important;
+  }
+
+  .el-main {
+    padding: 10px;
+  }
+
+  .el-footer {
+    padding: 10px 0;
+    height: auto !important;
+  }
+
+  /* 优化表单内容对齐 */
+  :deep(.el-input__inner) {
+    height: 38px;
+    line-height: 38px;
+  }
+
+  .input-icon {
+    width: 16px;
+    height: 16px;
   }
 }
 </style>

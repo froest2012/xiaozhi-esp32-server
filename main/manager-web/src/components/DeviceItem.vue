@@ -28,7 +28,7 @@
       </div>
       <div class="settings-btn" @click="handleChatHistory"
         :class="{ 'disabled-btn': device.memModelId === 'Memory_nomem' }">
-        <el-tooltip v-if="device.memModelId === 'Memory_nomem'" content="请先在“配置角色”界面开启记忆" placement="top">
+        <el-tooltip v-if="device.memModelId === 'Memory_nomem'" content="请先在配置角色界面开启记忆" placement="top">
           <span>聊天记录</span>
         </el-tooltip>
         <span v-else>聊天记录</span>
@@ -132,6 +132,22 @@ export default {
   background: #e6e6e6;
   color: #999;
   cursor: not-allowed;
+}
+
+/* 移动端适配样式 */
+@media screen and (max-width: 768px) {
+  .device-item {
+    width: 100%;
+    padding: 16px;
+    border-radius: 15px;
+  }
+
+  .settings-btn {
+    font-size: 11px;
+    padding: 0 8px;
+    height: 20px;
+    line-height: 20px;
+  }
 }
 </style>
 

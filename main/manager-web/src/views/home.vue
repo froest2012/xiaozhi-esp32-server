@@ -225,24 +225,23 @@ export default {
   /* 兼容老版本WebKit浏览器 */
   -o-background-size: cover;
   box-sizing: border-box;
+}
 
-  /* 兼容老版本Opera浏览器 */
-  .hellow-text {
-    margin-left: 75px;
-    color: #3d4566;
-    font-size: 33px;
-    font-weight: 700;
-    letter-spacing: 0;
-  }
+.hellow-text {
+  margin-left: 75px;
+  color: #3d4566;
+  font-size: 33px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
 
-  .hi-hint {
-    font-weight: 400;
-    font-size: 12px;
-    text-align: left;
-    color: #818cae;
-    margin-left: 75px;
-    margin-top: 5px;
-  }
+.hi-hint {
+  font-weight: 400;
+  font-size: 12px;
+  text-align: left;
+  color: #818cae;
+  margin-left: 75px;
+  margin-top: 5px;
 }
 
 .add-device-btn {
@@ -251,29 +250,29 @@ export default {
   margin-left: 75px;
   margin-top: 15px;
   cursor: pointer;
+}
 
-  .left-add {
-    width: 105px;
-    height: 34px;
-    border-radius: 17px;
-    background: #5778ff;
-    color: #fff;
-    font-size: 14px;
-    font-weight: 500;
-    text-align: center;
-    line-height: 34px;
-  }
+.left-add {
+  width: 105px;
+  height: 34px;
+  border-radius: 17px;
+  background: #5778ff;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  line-height: 34px;
+}
 
-  .right-add {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    background: #5778ff;
-    margin-left: -6px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+.right-add {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #5778ff;
+  margin-left: -6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .device-list-container {
@@ -360,5 +359,45 @@ export default {
       rgba(255, 255, 255, 0.3),
       rgba(255, 255, 255, 0));
   animation: shimmer 1.5s infinite;
+}
+
+/* 移动端适配样式 */
+@media screen and (max-width: 768px) {
+  .welcome {
+    min-width: unset;
+    min-height: unset;
+  }
+
+  .add-device {
+    height: 160px;
+  }
+
+  .hellow-text {
+    margin-left: 20px;
+    font-size: 24px;
+  }
+
+  .hi-hint {
+    margin-left: 20px;
+  }
+
+  .add-device-btn {
+    margin-left: 20px;
+  }
+
+  .device-list-container {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    padding: 15px 0;
+  }
+
+  .el-main {
+    padding: 10px !important;
+  }
+
+  .el-footer {
+    padding: 10px 0;
+    height: auto !important;
+  }
 }
 </style>

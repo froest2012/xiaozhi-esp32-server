@@ -1,7 +1,7 @@
 <template>
   <div class="copyright">
     <div class="footer-content">
-      <span>{{ year }} {{ name }} {{ version }}</span>
+      <span>{{ year }} {{ hideServerName ? '' : name }} {{ version }}</span>
       <template v-if="beianGaNum !== 'null'">
         <span v-if="beianIcpNum !== 'null' || name">|</span>
         <a :href="'http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=' + beianGaNum" target="_blank"
@@ -27,6 +27,11 @@ import { mapState } from 'vuex';
 
 export default {
   name: 'VersionFooter',
+  data() {
+    return {
+      hideServerName: true // 控制是否隐藏服务器名称
+    }
+  },
   computed: {
     ...mapState({
       version: state => state.pubConfig.version,

@@ -200,3 +200,12 @@ export function validateMobile(mobile, areaCode) {
     }
 }
 
+/**
+ * 检测当前设备是否为移动端
+ * @returns {boolean}
+ */
+export function isMobileDevice() {
+    const userAgent = navigator.userAgent.toLowerCase();
+    return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile/i.test(userAgent) ||
+        window.innerWidth <= 768;
+}
