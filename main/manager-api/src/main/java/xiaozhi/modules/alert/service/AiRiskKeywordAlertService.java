@@ -57,4 +57,11 @@ public interface AiRiskKeywordAlertService extends BaseService<AiRiskKeywordAler
      * @return
      */
     void detectKeywords(AgentChatHistoryEntity chatHistoryEntity);
+
+    /**
+     * 根据智能体ID查询风险告警记录列表
+     * @param agentId
+     * @return
+     */
+    List<AiRiskKeywordAlertDTO> listByAgentId(String agentId);
 }

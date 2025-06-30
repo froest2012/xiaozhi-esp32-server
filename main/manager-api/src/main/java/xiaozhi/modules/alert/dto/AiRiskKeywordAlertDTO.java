@@ -33,6 +33,12 @@ public class AiRiskKeywordAlertDTO {
     private String riskKey;
 
     /**
+     * 风险词，多个用;分割
+     */
+    @Schema(description = "agentId")
+    private String agentId;
+
+    /**
      * 创建时间
      */
     @Schema(description = "创建时间")

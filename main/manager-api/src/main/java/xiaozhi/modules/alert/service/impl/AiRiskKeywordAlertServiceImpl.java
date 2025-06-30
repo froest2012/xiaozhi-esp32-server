@@ -176,6 +176,21 @@ public class AiRiskKeywordAlertServiceImpl extends
         }
     }
 
+    @Override
+    public List<AiRiskKeywordAlertDTO> listByAgentId(String agentId) {
+        QueryWrapper<AiRiskKeywordAlertEntity> wrapper = new QueryWrapper<>();
+        wrapper.in("agent_id", agentId);
+        List<AiRiskKeywordAlertEntity> list = riskKeywordAlertDao.selectList(wrapper);
+        if (list == null) {
+            return new ArrayList<>();
+        }
+        return list.stream().map(entity -> {
+            AiRiskKeywordAlertDTO dto = new AiRiskKeywordAlertDTO();
+            BeanUtils.copyProperties(entity, dto);
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
     /**
      * 转换为报表DTO
      */

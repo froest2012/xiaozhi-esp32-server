@@ -43,6 +43,7 @@ import xiaozhi.modules.agent.dto.AgentCreateDTO;
 import xiaozhi.modules.agent.dto.AgentDTO;
 import xiaozhi.modules.agent.dto.AgentMemoryDTO;
 import xiaozhi.modules.agent.dto.AgentUpdateDTO;
+import xiaozhi.modules.agent.entity.AgentChatHistoryEntity;
 import xiaozhi.modules.agent.entity.AgentEntity;
 import xiaozhi.modules.agent.entity.AgentTemplateEntity;
 import xiaozhi.modules.agent.service.AgentChatAudioService;
@@ -308,6 +309,38 @@ public class MobileAgentController {
         }
         Map<String, List<AgentChatHistoryDTO>> resultMap = result.stream().collect(Collectors.groupingBy(AgentChatHistoryDTO::getSessionId, LinkedHashMap::new, Collectors.toList()));
         return new Result<List<List<AgentChatHistoryDTO>>>().ok(new ArrayList<>(resultMap.values()));
+    }
+
+    @GetMapping("/{id}/chat-history")
+    @Operation(summary = "获取智能体告警记录")
+    @RequiresPermissions("sys:role:normal")
+    public Result<List<AgentChatHistoryDTO>> getAgentRiskHistory(
+        @PathVariable("id") String id) {
+        // 获取当前用户
+        UserDetail user = SecurityUser.getUser();
+
+        // 检查权限
+        if (!agentService.checkAgentPermission(id, user.getId())) {
+            return new Result<List<AgentChatHistoryDTO>>().error("没有权限查看该智能体的告警记录");
+        }
+
+        //获取风险词
+        List<AiRiskKeywordAlertDTO> riskKeywords = aiRiskKeywordAlertService.listByAgentId(id);
+        if (CollectionUtil.isEmpty(riskKeywords)) {
+            return new Result<List<AgentChatHistoryDTO>>().ok(new ArrayList<>());
+        }
+        //根据聊天记录ID列表获取聊天记录
+        List<Long> chatHistoryIds = riskKeywords.stream().map(AiRiskKeywordAlertDTO::getChatHistoryId).toList();
+        List<AgentChatHistoryDTO> result = agentChatHistoryService.getChatHistoryByIds(chatHistoryIds);
+
+        Map<Long, AiRiskKeywordAlertDTO> riskKeywordsMap = riskKeywords.stream().collect(Collectors.toMap(AiRiskKeywordAlertDTO::getChatHistoryId, v -> v));
+        for (AgentChatHistoryDTO item : result) {
+            AiRiskKeywordAlertDTO riskKeyword = riskKeywordsMap.get(item.getId());
+            if (riskKeyword != null && StringUtils.isNotEmpty(riskKeyword.getRiskKey())) {
+                item.setRiskKeywords(riskKeyword.getRiskKey());
+            }
+        }
+        return new Result<List<AgentChatHistoryDTO>>().ok(result);
     }
 
     @PostMapping("/audio/{audioId}")

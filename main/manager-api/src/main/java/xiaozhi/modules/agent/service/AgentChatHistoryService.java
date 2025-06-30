@@ -53,4 +53,12 @@ public interface AgentChatHistoryService extends IService<AgentChatHistoryEntity
      * @param deleteText  是否删除文本
      */
     void deleteByAgentId(String agentId, Boolean deleteAudio, Boolean deleteText);
+
+    /**
+     * 根据ID列表获取聊天记录列表
+     *
+     * @param chatHistoryIds 聊天记录ID列表
+     * @return 聊天记录列表
+     */
+    List<AgentChatHistoryDTO> getChatHistoryByIds(List<Long> chatHistoryIds);
 }
