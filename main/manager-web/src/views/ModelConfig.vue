@@ -146,7 +146,7 @@
 
       <ModelEditDialog :modelType="activeTab" :visible.sync="editDialogVisible" :modelData="editModelData"
         @save="handleModelSave" />
-      <TtsModel :visible.sync="ttsDialogVisible" :ttsModelId="selectedTtsModelId" />
+      <TtsModel :visible.sync="ttsDialogVisible" :ttsModelId="selectedTtsModelId" :modelConfig="selectedModelConfig" />
       <AddModelDialog :modelType="activeTab" :visible.sync="addDialogVisible" @confirm="handleAddConfirm" />
     </div>
     <el-footer>
@@ -182,7 +182,8 @@ export default {
       total: 0,
       selectedModels: [],
       isAllSelected: false,
-      loading: false
+      loading: false,
+      selectedModelConfig: {}
     };
   },
 
@@ -234,6 +235,7 @@ export default {
     },
     openTtsDialog(row) {
       this.selectedTtsModelId = row.id;
+      this.selectedModelConfig = row;
       this.ttsDialogVisible = true;
     },
     headerCellClassName({ column, columnIndex }) {
