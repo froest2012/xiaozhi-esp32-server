@@ -12,8 +12,10 @@ import xiaozhi.common.constant.Constant;
 import xiaozhi.common.exception.RenException;
 import xiaozhi.common.redis.RedisKeys;
 import xiaozhi.common.redis.RedisUtils;
+import xiaozhi.modules.alert.dto.SmsAlertDTO;
 import xiaozhi.modules.sms.service.SmsService;
 import xiaozhi.modules.sys.service.SysParamsService;
+import java.util.regex.Pattern;
 
 @Service
 @AllArgsConstructor
@@ -21,6 +23,8 @@ import xiaozhi.modules.sys.service.SysParamsService;
 public class ALiYunSmsService implements SmsService {
     private final SysParamsService  sysParamsService;
     private final RedisUtils redisUtils;
+
+    private static final Pattern PHONE_PATTERN = Pattern.compile("^1[3-9]\\d{9}$");
 
     @Override
     public void sendVerificationCodeSms(String phone, String VerificationCode) {
@@ -50,6 +54,45 @@ public class ALiYunSmsService implements SmsService {
 
     }
 
+    @Override
+    public void sendAlertSms(String phone, SmsAlertDTO alertDTO) {
+        if (isValid(phone)) {
+            Client client = createClient();
+            String SignName = sysParamsService.getValue(Constant.SysMSMParam
+                .ALIYUN_SMS_SIGN_NAME.getValue(),true);
+            String TemplateCode = sysParamsService.getValue(Constant.SysMSMParam
+                .ALIYUN_SMS_ALERT_TEMPLATE_CODE.getValue(),true);
+            try {
+                SendSmsRequest sendSmsRequest = new SendSmsRequest()
+                    .setSignName(SignName)
+                    .setTemplateCode(TemplateCode)
+                    .setPhoneNumbers(phone)
+                    .setTemplateParam(String.format("{\"device\":\"%s\"}", alertDTO.getMacAddress()));
+                RuntimeOptions runtime = new RuntimeOptions();
+                SendSmsResponse sendSmsResponse = client.sendSmsWithOptions(sendSmsRequest, runtime);
+                log.info("发送短信响应的requestID: {}", sendSmsResponse.getBody().getRequestId());
+            } catch (Exception e) {
+                log.error("短信告警通知失败 {}", e.getMessage());
+                throw new RenException("短信告警通知失败");
+            }
+        } else {
+            log.info("{}不符合手机号规则，不发送短信告警通知", phone);
+        }
+    }
+
+    /**
+     * 校验手机号是否有效
+     * @param phoneNumber 待校验的手机号
+     * @return 如果手机号有效返回 true，否则返回 false
+     */
+    public boolean isValid(String phoneNumber) {
+        if (phoneNumber == null || phoneNumber.isEmpty()) {
+            return false;
+        }
+        String phone = phoneNumber.replace("+86", "");
+        // 使用正则表达式进行匹配
+        return PHONE_PATTERN.matcher(phone).matches();
+    }
 
     /**
      * 创建阿里云连接

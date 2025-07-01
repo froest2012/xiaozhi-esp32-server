@@ -162,6 +162,10 @@ public interface Constant {
          */
         ALIYUN_SMS_SMS_CODE_TEMPLATE_CODE("aliyun.sms.sms_code_template_code"),
         /**
+         * 阿里云聊天预警通知模版
+         */
+        ALIYUN_SMS_ALERT_TEMPLATE_CODE("aliyun.sms.alert_template_code"),
+        /**
          * 单号码最大短信发送条数
          */
         SERVER_SMS_MAX_SEND_COUNT("server.sms_max_send_count"),
