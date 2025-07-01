@@ -23,15 +23,19 @@ import org.springframework.util.StringUtils;
 import xiaozhi.common.constant.Constant;
 import xiaozhi.common.page.PageData;
 import xiaozhi.common.service.impl.BaseServiceImpl;
+import xiaozhi.common.user.UserDetail;
 import xiaozhi.common.utils.JsonUtils;
 import xiaozhi.modules.agent.entity.AgentChatHistoryEntity;
 import xiaozhi.modules.alert.dao.AiRiskKeywordAlertDao;
 import xiaozhi.modules.alert.dto.AiRiskKeywordAlertCreateDTO;
 import xiaozhi.modules.alert.dto.AiRiskKeywordAlertDTO;
 import xiaozhi.modules.alert.dto.AiRiskKeywordAlertReportDTO;
+import xiaozhi.modules.alert.dto.SmsAlertDTO;
 import xiaozhi.modules.alert.entity.AiRiskKeywordAlertEntity;
 import xiaozhi.modules.alert.service.AiRiskKeywordAlertService;
 import xiaozhi.modules.alert.service.TrieKeywordDetectionService;
+import xiaozhi.modules.security.user.SecurityUser;
+import xiaozhi.modules.sms.service.SmsService;
 import xiaozhi.modules.sys.dao.SysDictDataDao;
 import xiaozhi.modules.sys.entity.SysDictDataEntity;
 import xiaozhi.modules.xin.config.XinRedisKeys;
@@ -51,7 +55,7 @@ public class AiRiskKeywordAlertServiceImpl extends
 
     private final SysDictDataDao sysDictDataDao;
     private final AiRiskKeywordAlertDao riskKeywordAlertDao;
-
+    private final SmsService smsService;
     private final TrieKeywordDetectionService trieKeywordDetectionService;
 
     @Autowired
@@ -169,11 +173,33 @@ public class AiRiskKeywordAlertServiceImpl extends
         List<String> keywords = trieKeywordDetectionService.detectKeywords(chatHistoryEntity.getContent());
         log.info("risk keys : {}", JsonUtils.toJsonString(keywords));
         if (CollectionUtil.isNotEmpty(keywords)) {
-            // AiRiskKeywordAlertCreateDTO createDTO = new AiRiskKeywordAlertCreateDTO();
-            // createDTO.setChatHistoryId(String.valueOf(chatHistoryEntity.getId()));
-            // createDTO.setRiskKey(String.join(";", keywords));
-            // createAlert(createDTO);
+            AiRiskKeywordAlertCreateDTO createDTO = new AiRiskKeywordAlertCreateDTO();
+            createDTO.setChatHistoryId(String.valueOf(chatHistoryEntity.getId()));
+            createDTO.setRiskKey(String.join(";", keywords));
+            createDTO.setAgentId(chatHistoryEntity.getAgentId());
+            if (createAlert(createDTO) > 0) {
+                SmsAlertDTO alertDTO = new SmsAlertDTO();
+                alertDTO.setMacAddress(chatHistoryEntity.getMacAddress());
+                alertDTO.setRiskKey(String.join(";", keywords));
+                UserDetail userDetail = SecurityUser.getUser();
+                smsService.sendAlertSms(userDetail.getUsername(), alertDTO);
+            }
         }
+    }
+
+    @Override
+    public List<AiRiskKeywordAlertDTO> listByAgentId(String agentId) {
+        QueryWrapper<AiRiskKeywordAlertEntity> wrapper = new QueryWrapper<>();
+        wrapper.in("agent_id", agentId);
+        List<AiRiskKeywordAlertEntity> list = riskKeywordAlertDao.selectList(wrapper);
+        if (list == null) {
+            return new ArrayList<>();
+        }
+        return list.stream().map(entity -> {
+            AiRiskKeywordAlertDTO dto = new AiRiskKeywordAlertDTO();
+            BeanUtils.copyProperties(entity, dto);
+            return dto;
+        }).collect(Collectors.toList());
     }
 
     /**

@@ -1,5 +1,7 @@
 package xiaozhi.modules.sms.service;
 
+import xiaozhi.modules.alert.dto.SmsAlertDTO;
+
 /**
  * 短信服务的方法定义接口
  *
@@ -14,4 +16,6 @@ public interface SmsService {
      * @param VerificationCode 验证码
      */
     void sendVerificationCodeSms(String phone, String VerificationCode) ;
+
+    void sendAlertSms(String phone, SmsAlertDTO alertDTO);
 }

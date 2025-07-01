@@ -50,6 +50,7 @@ public class AiRiskKeywordAlertController {
     public Result<Void> detect() {
         AgentChatHistoryEntity  chatHistoryEntity = new AgentChatHistoryEntity();
         chatHistoryEntity.setContent("他们一起打架斗殴，自杀");
+        chatHistoryEntity.setId(9L);
         aiRiskKeywordAlertService.detectKeywords(chatHistoryEntity);
         return new Result<Void>().ok(null);
     }

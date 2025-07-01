@@ -40,6 +40,12 @@ public class AiRiskKeywordAlertEntity implements Serializable {
     /**
      * 风险词，多个用;分割
      */
+    @Schema(description = "agent_id")
+    private String agentId;
+
+    /**
+     * 风险词，多个用;分割
+     */
     @Schema(description = "risk_key")
     private String riskKey;
 

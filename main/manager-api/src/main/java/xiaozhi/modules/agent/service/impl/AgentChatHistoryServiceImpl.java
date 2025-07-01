@@ -1,5 +1,7 @@
 package xiaozhi.modules.agent.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
+import com.google.common.collect.Lists;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -104,5 +106,17 @@ public class AgentChatHistoryServiceImpl extends ServiceImpl<AiAgentChatHistoryD
             baseMapper.deleteHistoryByAgentId(agentId);
         }
 
+    }
+
+    @Override
+    public List<AgentChatHistoryDTO> getChatHistoryByIds(List<Long> chatHistoryIds) {
+        if (CollectionUtil.isEmpty(chatHistoryIds)) {
+            return Lists.newArrayList();
+        }
+        // 查询聊天记录
+        List<AgentChatHistoryEntity> historyList = listByIds(chatHistoryIds);
+
+        // 转换为DTO
+        return ConvertUtils.sourceToTarget(historyList, AgentChatHistoryDTO.class);
     }
 }
