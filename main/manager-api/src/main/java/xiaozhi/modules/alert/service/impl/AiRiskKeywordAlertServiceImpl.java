@@ -57,7 +57,6 @@ public class AiRiskKeywordAlertServiceImpl extends
     private final AiRiskKeywordAlertDao riskKeywordAlertDao;
     private final SmsService smsService;
     private final TrieKeywordDetectionService trieKeywordDetectionService;
-    private final AiRiskKeywordAlertService aiRiskKeywordAlertService;
 
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;

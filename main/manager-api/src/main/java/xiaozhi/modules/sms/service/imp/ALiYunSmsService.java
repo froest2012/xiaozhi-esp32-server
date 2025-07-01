@@ -70,7 +70,7 @@ public class ALiYunSmsService implements SmsService {
                     .setTemplateParam(String.format("{\"device\":\"%s\"}", alertDTO.getMacAddress()));
                 RuntimeOptions runtime = new RuntimeOptions();
                 SendSmsResponse sendSmsResponse = client.sendSmsWithOptions(sendSmsRequest, runtime);
-                log.info("发送短信响应的requestID: {}", sendSmsResponse.getBody().getRequestId());
+                log.info("发送短信告警通知的requestID: {}，手机号：{}", sendSmsResponse.getBody().getRequestId(), phone);
             } catch (Exception e) {
                 log.error("短信告警通知失败 {}", e.getMessage());
                 throw new RenException("短信告警通知失败");
