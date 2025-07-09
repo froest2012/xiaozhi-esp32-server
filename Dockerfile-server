@@ -14,7 +14,11 @@ FROM python:3.10-slim
 WORKDIR /opt/xiaozhi-esp32-server
 
 # 安装系统依赖
-RUN apt-get update && \
+# 使用阿里云镜像源并添加并行下载配置
+RUN sed -i 's/deb.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list && \
+    sed -i 's/security.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list && \
+    echo 'Acquire::Parallel "6";' > /etc/apt/apt.conf.d/99parallel && \
+    apt-get update && \
     apt-get install -y --no-install-recommends libopus0 ffmpeg && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
