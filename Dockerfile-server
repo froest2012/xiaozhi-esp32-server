@@ -15,9 +15,23 @@ WORKDIR /opt/xiaozhi-esp32-server
 
 # 安装系统依赖
 # 使用阿里云镜像源并添加并行下载配置
-RUN sed -i 's/deb.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list && \
-    sed -i 's/security.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list && \
+RUN rm -rf /etc/apt/sources.list.d/* && \
+    # 2. 重建 sources.list，仅包含阿里云源
+    echo "deb http://mirrors.aliyun.com/debian bookworm main contrib non-free" > /etc/apt/sources.list && \
+    echo "deb http://mirrors.aliyun.com/debian bookworm-updates main contrib non-free" >> /etc/apt/sources.list && \
+    echo "deb http://mirrors.aliyun.com/debian bookworm-backports main contrib non-free" >> /etc/apt/sources.list && \
+    echo "deb http://mirrors.aliyun.com/debian-security bookworm-security main contrib non-free" >> /etc/apt/sources.list && \
+    # 3. 核心配置：仅允许阿里云源，拒绝所有其他域名
+    echo 'Acquire::http::AllowRedirect "false";' > /etc/apt/apt.conf.d/99no-redirect && \
+    echo 'Acquire::http::Dl-Limit "0";' > /etc/apt/apt.conf.d/99no-limit && \
+    echo 'Acquire::http::Pipeline-Depth "0";' > /etc/apt/apt.conf.d/99pipeline && \
+    # 明确阻止官方源域名（通过 APT 的域名过滤机制）
+    echo 'Acquire::http::Host::deb.debian.org "deny";' > /etc/apt/apt.conf.d/99block-debian && \
+    echo 'Acquire::http::Host::security.debian.org "deny";' >> /etc/apt/apt.conf.d/99block-debian && \
+    # 4. 并行下载和重试配置
     echo 'Acquire::Parallel "6";' > /etc/apt/apt.conf.d/99parallel && \
+    echo 'APT::Acquire::Retries "5";' > /etc/apt/apt.conf.d/80retries && \
+    # 5. 更新并安装软件包
     apt-get update && \
     apt-get install -y --no-install-recommends libopus0 ffmpeg && \
     apt-get clean && \
