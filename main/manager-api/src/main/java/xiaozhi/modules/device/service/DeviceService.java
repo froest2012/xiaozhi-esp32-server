@@ -98,4 +98,8 @@ public interface DeviceService extends BaseService<DeviceEntity> {
      */
     void updateDeviceConnectionInfo(String agentId, String deviceId, String appVersion);
 
+    /**
+     * 自动添加设备
+     */
+    void addDeviceAuto(Long userId, DeviceManualAddDTO dto);
 }

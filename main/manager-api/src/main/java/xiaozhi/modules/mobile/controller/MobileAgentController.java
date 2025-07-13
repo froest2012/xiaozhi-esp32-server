@@ -52,6 +52,7 @@ import xiaozhi.modules.agent.service.AgentService;
 import xiaozhi.modules.agent.service.AgentTemplateService;
 import xiaozhi.modules.alert.dto.AiRiskKeywordAlertDTO;
 import xiaozhi.modules.alert.service.AiRiskKeywordAlertService;
+import xiaozhi.modules.device.dto.DeviceManualAddDTO;
 import xiaozhi.modules.device.entity.DeviceEntity;
 import xiaozhi.modules.device.service.DeviceService;
 import xiaozhi.modules.mobile.controller.dto.ChatHistoryParam;
@@ -376,4 +377,12 @@ public class MobileAgentController {
                 .body(audioData);
     }
 
+    @PostMapping("/device/add")
+    @Operation(summary = "自动添加设备")
+    @RequiresPermissions("sys:role:normal")
+    public Result<Void> addDeviceAuto(@RequestBody @Valid DeviceManualAddDTO dto) {
+        UserDetail user = SecurityUser.getUser();
+        deviceService.addDeviceAuto(user.getId(), dto);
+        return new Result<>();
+    }
 }

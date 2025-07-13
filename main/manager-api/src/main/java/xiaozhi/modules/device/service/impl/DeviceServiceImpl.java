@@ -76,6 +76,35 @@ public class DeviceServiceImpl extends BaseServiceImpl<DeviceDao, DeviceEntity> 
     }
 
     @Override
+    public void addDeviceAuto(Long userId, DeviceManualAddDTO dto) {
+        QueryWrapper<DeviceEntity> wrapper = new QueryWrapper<>();
+        wrapper.eq("mac_address", dto.getMacAddress());
+        DeviceEntity entity = baseDao.selectOne(wrapper);
+        Date now = new Date();
+        if (entity == null) {
+            entity = new DeviceEntity();
+            entity.setCreateDate(now);
+            entity.setLastConnectedAt(now);
+            entity.setCreator(userId);
+        }
+        entity.setUserId(userId);
+        entity.setAgentId(dto.getAgentId());
+        entity.setBoard(dto.getBoard());
+        entity.setAppVersion(dto.getAppVersion());
+        entity.setMacAddress(dto.getMacAddress());
+        entity.setAutoUpdate(1);
+        entity.setUpdateDate(now);
+        entity.setUpdater(userId);
+        if (null == entity.getId()) {
+            entity.setId(dto.getMacAddress());
+            baseDao.insert(entity);
+        } else {
+            baseDao.updateById(entity);
+        }
+
+    }
+
+    @Override
     public Boolean deviceActivation(String agentId, String activationCode) {
         if (StringUtils.isBlank(activationCode)) {
             throw new RenException("激活码不能为空");
