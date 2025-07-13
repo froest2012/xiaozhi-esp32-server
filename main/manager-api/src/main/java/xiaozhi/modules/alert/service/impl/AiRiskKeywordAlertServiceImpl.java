@@ -114,7 +114,7 @@ public class AiRiskKeywordAlertServiceImpl extends
         entity.setRiskKey(createDTO.getRiskKey());
         entity.setCreatedAt(LocalDateTime.now());
         entity.setUpdatedAt(LocalDateTime.now());
-
+        entity.setAgentId(createDTO.getAgentId());
         super.insert(entity);
         return entity.getId();
     }
