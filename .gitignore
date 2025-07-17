@@ -175,3 +175,4 @@ uploadfile
 *.json
 .vscode
 xiaozhi-server/models/SenseVoiceSmall/model.pt
+.cursor
