@@ -61,59 +61,58 @@
 
         <!-- 右侧内容 -->
         <div class="content-area">
-          <el-card :class="['model-card', { 'mobile-table': isMobile }]" shadow="never">
-            <div class="table-container" :class="{ 'mobile-table': isMobile }">
-              <el-table ref="modelTable" style="width: 100%" v-loading="loading" element-loading-text="拼命加载中"
-                element-loading-spinner="el-icon-loading" element-loading-background="rgba(255, 255, 255, 0.7)"
-                :header-cell-style="{ background: 'transparent' }" :data="modelList" class="data-table"
-                header-row-class-name="table-header" :header-cell-class-name="headerCellClassName"
-                @selection-change="handleSelectionChange">
-                <el-table-column type="selection" :width="isMobile ? 40 : 55" align="center"></el-table-column>
-                <el-table-column label="模型ID" prop="id" align="center" :width="isMobile ? 120 : undefined" :show-overflow-tooltip="isMobile"></el-table-column>
-                <el-table-column label="模型名称" prop="modelName" align="center" :width="isMobile ? 100 : undefined" :show-overflow-tooltip="isMobile"></el-table-column>
-                <el-table-column label="提供商" align="center" :width="isMobile ? 80 : undefined">
-                  <template slot-scope="scope">
-                    {{ scope.row.configJson.type || '未知' }}
-                  </template>
-                </el-table-column>
-                <el-table-column label="启用" align="center" :width="isMobile ? 60 : undefined">
-                  <template slot-scope="scope">
-                    <el-switch v-model="scope.row.isEnabled" :class="['custom-switch', { 'mobile-switch': isMobile }]" :active-value="1" :inactive-value="0"
-                      @change="handleStatusChange(scope.row)" />
-                  </template>
-                </el-table-column>
-                <el-table-column label="默认" align="center" :width="isMobile ? 60 : undefined">
-                  <template slot-scope="scope">
-                    <el-switch v-model="scope.row.isDefault" :class="['custom-switch', { 'mobile-switch': isMobile }]" :active-value="1" :inactive-value="0"
-                      @change="handleDefaultChange(scope.row)" />
-                  </template>
-                </el-table-column>
-                <el-table-column v-if="activeTab === 'tts'" label="音色" align="center" :width="isMobile ? 60 : undefined">
-                  <template slot-scope="scope">
-                    <el-button type="text" :size="isMobile ? 'mini' : 'mini'" @click="openTtsDialog(scope.row)"
-                      :class="['voice-management-btn', { 'mobile-voice-btn': isMobile }]">
-                      {{ isMobile ? '音色' : '音色管理' }}
-                    </el-button>
-                  </template>
-                </el-table-column>
-                <el-table-column label="操作" align="center" :width="isMobile ? 80 : 150">
-                  <template slot-scope="scope">
-                    <el-button type="text" :size="isMobile ? 'mini' : 'mini'" @click="editModel(scope.row)"
-                      :class="['edit-btn', { 'mobile-btn': isMobile }]">
-                      修改
-                    </el-button>
-                    <el-button type="text" :size="isMobile ? 'mini' : 'mini'" @click="deleteModel(scope.row)"
-                      :class="['delete-btn', { 'mobile-btn': isMobile }]">
-                      删除
-                    </el-button>
-                  </template>
-                </el-table-column>
-              </el-table>
-            </div>
-            <div class="table-footer" :class="{ 'mobile-footer': isMobile }">
-              <div class="batch-actions" :class="{ 'mobile-actions': isMobile }">
-                <el-button :size="isMobile ? 'mini' : 'mini'" type="primary" @click="selectAll">
-                  {{ isAllSelected ? '取消全选' : '全选' }}
+          <el-card class="model-card" shadow="never">
+            <el-table ref="modelTable" style="width: 100%" v-loading="loading" element-loading-text="拼命加载中"
+              element-loading-spinner="el-icon-loading" element-loading-background="rgba(255, 255, 255, 0.7)"
+              :header-cell-style="{ background: 'transparent' }" :data="modelList" class="data-table"
+              header-row-class-name="table-header" :header-cell-class-name="headerCellClassName"
+              @selection-change="handleSelectionChange">
+              <el-table-column type="selection" width="55" align="center"></el-table-column>
+              <el-table-column label="模型ID" prop="id" align="center"></el-table-column>
+              <el-table-column label="模型名称" prop="modelName" align="center"></el-table-column>
+              <el-table-column label="提供商" align="center">
+                <template slot-scope="scope">
+                  {{ scope.row.configJson.type || '未知' }}
+                </template>
+              </el-table-column>
+              <el-table-column label="是否启用" align="center">
+                <template slot-scope="scope">
+                  <el-switch v-model="scope.row.isEnabled" class="custom-switch" :active-value="1" :inactive-value="0"
+                    @change="handleStatusChange(scope.row)" />
+                </template>
+              </el-table-column>
+              <el-table-column label="是否默认" align="center">
+                <template slot-scope="scope">
+                  <el-switch v-model="scope.row.isDefault" class="custom-switch" :active-value="1" :inactive-value="0"
+                    @change="handleDefaultChange(scope.row)" />
+                </template>
+              </el-table-column>
+              <el-table-column v-if="activeTab === 'tts'" label="音色管理" align="center">
+                <template slot-scope="scope">
+                  <el-button type="text" size="mini" @click="openTtsDialog(scope.row)" class="voice-management-btn">
+                    音色管理
+                  </el-button>
+                </template>
+              </el-table-column>
+              <el-table-column label="操作" align="center" width="180px">
+                <template slot-scope="scope">
+                  <el-button type="text" size="mini" @click="editModel(scope.row)" class="edit-btn">
+                    修改
+                  </el-button>
+                  <el-button type="text" size="mini" @click="duplicateModel(scope.row)" class="edit-btn">
+                    创建副本
+                  </el-button>
+                  <el-button type="text" size="mini" @click="deleteModel(scope.row)" class="delete-btn">
+                    删除
+                  </el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+            <div class="table-footer">
+              <div class="batch-actions">
+                <el-button size="mini" type="primary" @click="selectAll">
+                  {{ isAllSelected ?
+                    '取消全选' : '全选' }}
                 </el-button>
                 <el-button type="success" :size="isMobile ? 'mini' : 'mini'" @click="addModel" class="add-btn">
                   新增
@@ -300,6 +299,11 @@ export default {
       this.editModelData = JSON.parse(JSON.stringify(model));
       this.editDialogVisible = true;
     },
+    duplicateModel(model) {
+      this.editModelData = JSON.parse(JSON.stringify(model));
+      this.editModelData.duplicateMode = true;
+      this.editDialogVisible = true;
+    },
     // 删除单个模型
     deleteModel(model) {
       this.$confirm('确定要删除该模型吗?', '提示', {
@@ -336,19 +340,34 @@ export default {
       const modelType = this.activeTab;
       const id = formData.id;
 
-      Api.model.updateModel(
-        { modelType, provideCode, id, formData },
+      if (this.editModelData.duplicateMode) {
+        Api.model.addModel({modelType, provideCode, formData},
         ({ data }) => {
           if (data.code === 0) {
-            this.$message.success('保存成功');
+            this.$message.success('创建副本成功');
             this.loadData();
             this.editDialogVisible = false;
           } else {
-            this.$message.error(data.msg || '保存失败');
+            this.$message.error(data.msg || '创建副本失败');
           }
           done && done(); // 调用done回调关闭加载状态
-        }
-      );
+        })
+      }
+      else {
+        Api.model.updateModel(
+          { modelType, provideCode, id, formData },
+          ({ data }) => {
+            if (data.code === 0) {
+              this.$message.success('保存成功');
+              this.loadData();
+              this.editDialogVisible = false;
+            } else {
+              this.$message.error(data.msg || '保存失败');
+            }
+            done && done(); // 调用done回调关闭加载状态
+          }
+        );
+      }
     },
     selectAll() {
       if (this.isAllSelected) {
