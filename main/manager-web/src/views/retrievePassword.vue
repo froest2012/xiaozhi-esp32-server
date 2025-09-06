@@ -1,25 +1,47 @@
 <template>
-  <div class="welcome" @keyup.enter="retrievePassword">
+  <div class="welcome" :class="themeClass" @keyup.enter="retrievePassword">
     <el-container style="height: 100%;">
       <!-- 保持相同的头部 -->
       <el-header>
-        <div style="display: flex;align-items: center;margin-top: 15px;margin-left: 10px;gap: 10px;">
-          <img loading="lazy" alt="" src="@/assets/xiaozhi-logo.png" style="width: 45px;height: 45px;" />
-          <img loading="lazy" alt="" src="@/assets/xiaozhi-ai.png" style="height: 18px;" />
+        <div style="display: flex;align-items: center;justify-content: space-between;margin-top: 15px;margin-left: 20px;margin-right: 20px;gap: 10px;">
+          <div class="app-title" style="font-size: 24px; font-weight: 700; letter-spacing: 1px; transition: all 0.3s ease;">AI小新-智控台</div>
+          <div class="theme-selector">
+            <el-dropdown @command="changeBackgroundTheme" trigger="hover">
+              <div class="theme-button">
+                🎨 <i class="el-icon-arrow-down"></i>
+              </div>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="flow" :class="{'active-theme': currentTheme === 'flow'}">
+                  🌊 流动渐变
+                </el-dropdown-item>
+                <el-dropdown-item command="bubbles" :class="{'active-theme': currentTheme === 'bubbles'}">
+                  ☁️ 优雅光晕
+                </el-dropdown-item>
+                <el-dropdown-item command="particles" :class="{'active-theme': currentTheme === 'particles'}">
+                  ✨ 粒子星空
+                </el-dropdown-item>
+                <el-dropdown-item command="geometric" :class="{'active-theme': currentTheme === 'geometric'}">
+                  🔷 现代几何
+                </el-dropdown-item>
+                <el-dropdown-item command="breathing" :class="{'active-theme': currentTheme === 'breathing'}">
+                  💫 呼吸光晕
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
         </div>
       </el-header>
-      <div class="login-person">
-        <img loading="lazy" alt="" src="@/assets/login/register-person.png" style="width: 100%;" />
-      </div>
-      <el-main style="position: relative;">
+      <el-main style="position: relative; display: flex; align-items: center; justify-content: center;">
         <form @submit.prevent="retrievePassword">
           <div class="login-box">
             <!-- 修改标题部分 -->
-            <div style="display: flex;align-items: center;gap: 20px;margin-bottom: 39px;padding: 0 30px;">
-              <img loading="lazy" alt="" src="@/assets/login/hi.png" style="width: 34px;height: 34px;" />
-              <div class="login-text">重置密码</div>
-              <div class="login-welcome">
-                PASSWORD RETRIEVE
+            <div class="login-header">
+              <div class="login-icon-wrapper">
+                <div class="login-icon">🔐</div>
+              </div>
+              <div class="login-title-group">
+                <div class="login-text">重置密码</div>
+                <div class="login-welcome">PASSWORD RETRIEVE</div>
               </div>
             </div>
 
@@ -40,8 +62,10 @@
                   <img loading="lazy" alt="" class="input-icon" src="@/assets/login/shield.png" />
                   <el-input v-model="form.captcha" placeholder="请输入验证码" style="flex: 1;" />
                 </div>
-                <img loading="lazy" v-if="captchaUrl" :src="captchaUrl" alt="验证码"
-                  style="width: 150px; height: 40px; cursor: pointer;" @click="fetchCaptcha" />
+                <div class="captcha-container">
+                  <img loading="lazy" v-if="captchaUrl" :src="captchaUrl" alt="验证码"
+                    style="width: 150px; height: 40px; cursor: pointer;" @click="fetchCaptcha" />
+                </div>
               </div>
 
               <!-- 手机验证码 -->
@@ -71,9 +95,8 @@
               </div>
 
               <!-- 修改底部链接 -->
-              <div class="auth-links">
-                <div @click="goToLogin">返回登录</div>
-                <div></div>
+              <div style="font-weight: 400;font-size: 14px;text-align: left;color: #5778ff;margin-top: 20px;">
+                <div style="cursor: pointer;" @click="goToLogin">返回登录</div>
               </div>
             </div>
 
@@ -81,11 +104,11 @@
             <div class="login-btn" @click="retrievePassword">立即修改</div>
 
             <!-- 保持相同的协议声明 -->
-            <div class="auth-agreement">
+            <div style="font-size: 14px;color: #979db1;">
               同意
-              <span class="agreement-link">《用户协议》</span>
+              <div style="display: inline-block;color: #5778FF;cursor: pointer;">《用户协议》</div>
               和
-              <span class="agreement-link">《隐私政策》</span>
+              <div style="display: inline-block;color: #5778FF;cursor: pointer;">《隐私政策》</div>
             </div>
           </div>
         </form>
@@ -117,6 +140,9 @@ export default {
     }),
     canSendMobileCaptcha() {
       return this.countdown === 0 && validateMobile(this.form.mobile, this.form.areaCode);
+    },
+    themeClass() {
+      return `theme-${this.currentTheme}`;
     }
   },
   data() {
@@ -132,13 +158,29 @@ export default {
       },
       captchaUrl: '',
       countdown: 0,
-      timer: null
+      timer: null,
+      currentTheme: localStorage.getItem('backgroundTheme') || 'flow'
     }
   },
   mounted() {
     this.fetchCaptcha();
   },
   methods: {
+    changeBackgroundTheme(theme) {
+      this.currentTheme = theme;
+      localStorage.setItem('backgroundTheme', theme);
+      this.$message.success(`已切换到${this.getThemeName(theme)}主题`);
+    },
+    getThemeName(theme) {
+      const names = {
+        flow: '流动渐变',
+        bubbles: '优雅光晕',
+        particles: '粒子星空',
+        geometric: '现代几何',
+        breathing: '呼吸光晕'
+      };
+      return names[theme] || '未知主题';
+    },
     // 复用验证码获取方法
     fetchCaptcha() {
       this.form.captchaId = getUUID();
@@ -255,5 +297,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/auth-antd.scss';
+@import './auth.scss';
+
+.send-captcha-btn {
+  margin-right: -5px;
+  min-width: 100px;
+  height: 40px;
+  line-height: 40px;
+  border-radius: 4px;
+  font-size: 14px;
+  background: rgb(87, 120, 255);
+  border: none;
+  padding: 0;
+
+  &:disabled {
+    background: #c0c4cc;
+    cursor: not-allowed;
+  }
+}
 </style>

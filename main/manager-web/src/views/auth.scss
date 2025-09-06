@@ -5,15 +5,569 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(145deg, #f5f8fd, #6baaff, #9ebbfc, #f5f8fd);
-    background-size: cover;
-    /* 确保背景图像覆盖整个元素 */
-    background-position: center;
-    /* 从顶部中心对齐 */
-    -webkit-background-size: cover;
-    /* 兼容老版本WebKit浏览器 */
-    -o-background-size: cover;
-    /* 兼容老版本Opera浏览器 */
+    position: relative;
+    overflow: hidden;
+    transition: all 0.5s ease;
+}
+
+/* 主题1: 流动渐变波浪 (默认) */
+.welcome.theme-flow {
+    background: linear-gradient(-45deg, #4A90A4, #83C5BE, #FFDDD2, #5fb3c7, #6BB6AA, #74A9BC);
+    background-size: 400% 400%;
+    animation: gradient-flow 15s ease infinite;
+}
+
+/* 主题2: 优雅光晕 */
+.welcome.theme-bubbles {
+    background: linear-gradient(45deg, #83C5BE 0%, #6BB6AA 25%, #4A90A4 75%, #74A9BC 100%);
+    background-size: 300% 300%;
+    animation: elegant-flow 20s ease-in-out infinite;
+}
+
+.welcome.theme-bubbles::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 25% 25%, rgba(255, 221, 210, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(107, 182, 170, 0.12) 0%, transparent 60%),
+        radial-gradient(circle at 85% 15%, rgba(131, 197, 190, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 15% 85%, rgba(255, 221, 210, 0.1) 0%, transparent 55%);
+    animation: elegant-drift 15s ease-in-out infinite reverse;
+    pointer-events: none;
+}
+
+.welcome.theme-bubbles::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 600px;
+    height: 600px;
+    margin: -300px 0 0 -300px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, rgba(131, 197, 190, 0.03) 40%, transparent 70%);
+    border-radius: 50%;
+    animation: gentle-pulse 8s ease-in-out infinite;
+    pointer-events: none;
+}
+
+/* 主题3: 粒子星空 */
+.welcome.theme-particles {
+    background: linear-gradient(180deg, #2d3748 0%, #4A90A4 50%, #5fb3c7 100%);
+}
+
+.welcome.theme-particles::before {
+    background: none !important;
+    animation: none !important;
+}
+
+.welcome.theme-particles::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        radial-gradient(2px 2px at 20% 30%, rgba(255, 255, 255, 0.8), transparent),
+        radial-gradient(2px 2px at 40% 60%, rgba(255, 221, 210, 0.6), transparent),
+        radial-gradient(1px 1px at 90% 40%, rgba(131, 197, 190, 0.8), transparent),
+        radial-gradient(1px 1px at 60% 90%, rgba(255, 255, 255, 0.6), transparent),
+        radial-gradient(2px 2px at 80% 10%, rgba(255, 255, 255, 0.9), transparent);
+    background-size: 200px 200px, 300px 300px, 150px 150px, 250px 250px, 180px 180px;
+    animation: particles-twinkle 8s linear infinite;
+    pointer-events: none;
+}
+
+/* 主题4: 现代几何 */
+.welcome.theme-geometric {
+    background: linear-gradient(135deg, #4A90A4 0%, #83C5BE 100%);
+    position: relative;
+}
+
+.welcome.theme-geometric::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(30deg, transparent 40%, rgba(255, 221, 210, 0.08) 40%, rgba(255, 221, 210, 0.08) 60%, transparent 60%),
+        linear-gradient(150deg, transparent 40%, rgba(107, 182, 170, 0.06) 40%, rgba(107, 182, 170, 0.06) 60%, transparent 60%),
+        linear-gradient(90deg, transparent 48%, rgba(116, 169, 188, 0.05) 48%, rgba(116, 169, 188, 0.05) 52%, transparent 52%);
+    background-size: 120px 120px, 200px 200px, 80px 80px;
+    animation: modern-geometric 25s linear infinite;
+    pointer-events: none;
+}
+
+.welcome.theme-geometric::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        conic-gradient(from 45deg at 20% 30%, transparent 0deg, rgba(131, 197, 190, 0.03) 60deg, transparent 120deg),
+        conic-gradient(from 135deg at 80% 70%, transparent 0deg, rgba(255, 221, 210, 0.04) 90deg, transparent 180deg);
+    animation: geometric-rotation 30s linear infinite;
+    pointer-events: none;
+}
+
+/* 主题5: 呼吸光晕 */
+.welcome.theme-breathing {
+    background: radial-gradient(ellipse at center, #83C5BE 0%, #4A90A4 50%, #2d3748 100%);
+}
+
+.welcome.theme-breathing::before {
+    background: none !important;
+    animation: none !important;
+}
+
+.welcome.theme-breathing::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 300px;
+    margin: -150px 0 0 -150px;
+    background: radial-gradient(circle, rgba(255, 221, 210, 0.3) 0%, rgba(131, 197, 190, 0.2) 30%, transparent 70%);
+    border-radius: 50%;
+    animation: breathing-pulse 6s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.welcome::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 30%, rgba(255, 221, 210, 0.15), transparent 40%), radial-gradient(circle at 80% 70%, rgba(131, 197, 190, 0.2), transparent 50%), radial-gradient(circle at 60% 20%, rgba(255, 255, 255, 0.1), transparent 30%), radial-gradient(circle at 30% 80%, rgba(74, 144, 164, 0.15), transparent 40%);
+    pointer-events: none;
+    animation: overlay-drift 20s ease-in-out infinite;
+    opacity: 0.6;
+}
+
+.welcome::after {
+    content: '';
+    position: absolute;
+    top: 15%;
+    left: 15%;
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, rgba(255, 221, 210, 0.1), transparent 70%);
+    border-radius: 50%;
+    animation: float-decoration 10s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+@keyframes float-decoration {
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.3;
+    }
+    50% {
+        transform: translate(20px, -15px) scale(1.1);
+        opacity: 0.6;
+    }
+}
+
+
+/* 标题样式增强 */
+
+.el-header {
+    z-index: 20;
+    position: relative;
+}
+
+.app-title:hover {
+    transform: translateY(-1px);
+    color: #1a202c;
+    text-shadow: 0 4px 8px rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+}
+
+
+/* 验证码图片样式优化 */
+
+img[alt="验证码"] {
+    border-radius: 12px !important;
+    border: 2px solid rgba(226, 232, 240, 0.8) !important;
+    background: rgba(248, 250, 252, 0.8) !important;
+    backdrop-filter: blur(5px) !important;
+    transition: all 0.3s ease !important;
+    cursor: pointer !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+img[alt="验证码"]:hover {
+    border-color: rgba(74, 144, 164, 0.6) !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    box-shadow: 0 0 0 3px rgba(74, 144, 164, 0.1) !important;
+    transform: none !important;
+}
+
+img[alt="验证码"]:active {
+    transform: scale(0.98) !important;
+    transition: transform 0.1s ease !important;
+}
+
+
+/* 验证码容器优化 */
+
+.captcha-container {
+    position: relative;
+    display: inline-block;
+}
+
+.captcha-container::after {
+    content: '🔄 点击刷新';
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: #74809A;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    white-space: nowrap;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 2px 6px;
+    border-radius: 6px;
+    backdrop-filter: blur(5px);
+}
+
+.captcha-container:hover::after {
+    opacity: 1;
+}
+
+
+/* 登录表单头部样式重设计 */
+
+.login-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+    padding: 24px 30px 0 30px;
+    position: relative;
+}
+
+.login-header::after {
+    content: '';
+    position: absolute;
+    bottom: -16px;
+    left: 30px;
+    right: 30px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(74, 144, 164, 0.2) 20%, rgba(74, 144, 164, 0.4) 50%, rgba(74, 144, 164, 0.2) 80%, transparent 100%);
+}
+
+.login-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, rgba(74, 144, 164, 0.1) 0%, rgba(131, 197, 190, 0.1) 100%);
+    border-radius: 50%;
+    border: 2px solid rgba(74, 144, 164, 0.15);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.login-icon {
+    font-size: 20px;
+}
+
+
+/* 统一的图标动画 */
+
+.login-icon {
+    animation: pulse-gentle 3s ease-in-out infinite;
+}
+
+@keyframes wave-gentle {
+    0%,
+    50%,
+    100% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(15deg);
+    }
+}
+
+@keyframes pulse-gentle {
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.9;
+    }
+}
+
+
+/* 流动渐变背景动画 */
+
+@keyframes gradient-flow {
+    0% {
+        background-position: 0% 50%;
+    }
+    25% {
+        background-position: 100% 50%;
+    }
+    50% {
+        background-position: 100% 100%;
+    }
+    75% {
+        background-position: 50% 100%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+
+/* 覆盖层漂移动画 */
+
+@keyframes overlay-drift {
+    0%,
+    100% {
+        transform: translateX(0) translateY(0);
+        opacity: 0.6;
+    }
+    33% {
+        transform: translateX(10px) translateY(-5px);
+        opacity: 0.4;
+    }
+    66% {
+        transform: translateX(-5px) translateY(10px);
+        opacity: 0.7;
+    }
+}
+
+/* 优雅流动动画 */
+@keyframes elegant-flow {
+    0% {
+        background-position: 0% 50%;
+    }
+    25% {
+        background-position: 50% 100%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    75% {
+        background-position: 50% 0%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* 优雅漂移动画 */
+@keyframes elegant-drift {
+    0%, 100% {
+        transform: translateX(0) translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+    25% {
+        transform: translateX(20px) translateY(-15px) rotate(2deg);
+        opacity: 0.8;
+    }
+    50% {
+        transform: translateX(-10px) translateY(25px) rotate(-1deg);
+        opacity: 0.9;
+    }
+    75% {
+        transform: translateX(15px) translateY(10px) rotate(1deg);
+        opacity: 0.7;
+    }
+}
+
+/* 轻柔脉冲动画 */
+@keyframes gentle-pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.3;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.6;
+    }
+}
+
+/* 粒子闪烁动画 */
+@keyframes particles-twinkle {
+    0%, 100% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+    25% {
+        opacity: 0.8;
+        transform: scale(1.1);
+    }
+    50% {
+        opacity: 0.1;
+        transform: scale(0.9);
+    }
+    75% {
+        opacity: 0.6;
+        transform: scale(1.05);
+    }
+}
+
+/* 现代几何移动动画 */
+@keyframes modern-geometric {
+    0% {
+        background-position: 0 0, 0 0, 0 0;
+        transform: translateX(0) translateY(0);
+    }
+    25% {
+        background-position: 30px 30px, 50px 50px, 20px 20px;
+        transform: translateX(5px) translateY(-3px);
+    }
+    50% {
+        background-position: 60px 60px, 100px 100px, 40px 40px;
+        transform: translateX(-3px) translateY(8px);
+    }
+    75% {
+        background-position: 90px 30px, 150px 50px, 60px 20px;
+        transform: translateX(2px) translateY(-5px);
+    }
+    100% {
+        background-position: 120px 0, 200px 0, 80px 0;
+        transform: translateX(0) translateY(0);
+    }
+}
+
+/* 几何旋转动画 */
+@keyframes geometric-rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* 呼吸脉冲动画 */
+@keyframes breathing-pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.3;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.6;
+    }
+}
+
+/* 不同主题下的标题颜色适配 */
+.welcome.theme-flow .app-title {
+    color: #2d3748 !important;
+    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.3) !important;
+}
+
+.welcome.theme-bubbles .app-title {
+    color: #1a202c !important;
+    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.4) !important;
+}
+
+.welcome.theme-particles .app-title {
+    color: #f7fafc !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+.welcome.theme-geometric .app-title {
+    color: #1a202c !important;
+    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.4) !important;
+}
+
+.welcome.theme-breathing .app-title {
+    color: #f7fafc !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* 不同主题下的主题选择器样式适配 */
+.welcome.theme-particles .theme-button,
+.welcome.theme-breathing .theme-button {
+    background: rgba(0, 0, 0, 0.7) !important;
+    color: #f7fafc !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.welcome.theme-particles .theme-button:hover,
+.welcome.theme-breathing .theme-button:hover {
+    background: rgba(0, 0, 0, 0.8) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* 主题选择器样式 */
+.theme-selector {
+    position: relative;
+    z-index: 100;
+}
+
+.theme-button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #2d3748;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(74, 144, 164, 0.2);
+}
+
+.theme-button:hover {
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 4px 12px rgba(74, 144, 164, 0.3);
+    transform: translateY(-2px);
+}
+
+.el-dropdown-menu .active-theme {
+    background-color: rgba(74, 144, 164, 0.1);
+    color: #4A90A4;
+    font-weight: 600;
+}
+
+.el-dropdown-menu .el-dropdown-menu__item {
+    font-size: 14px;
+    padding: 8px 16px;
+    transition: all 0.3s ease;
+}
+
+.el-dropdown-menu .el-dropdown-menu__item:hover {
+    background-color: rgba(74, 144, 164, 0.05);
+    color: #4A90A4;
+}
+
+.login-title-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .login-text {
@@ -24,24 +578,26 @@
 }
 
 .login-welcome {
-    font-weight: 400;
-    font-size: 9px;
+    font-weight: 500;
+    font-size: 12px;
     text-align: left;
-    color: #818cae;
-    align-self: flex-end;
-    margin-bottom: 7px;
+    color: #74809A;
+    letter-spacing: 0.5px;
+    opacity: 0.8;
 }
 
 .login-box {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    right: 18%;
-    background-color: #fff;
-    border-radius: 20px;
-    padding: 35px 0;
-    width: 450px;
+    position: relative;
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 24px;
+    padding: 40px 0;
+    width: 480px;
+    max-width: 90vw;
     box-sizing: border-box;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 15px 25px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    z-index: 10;
 }
 
 .el-dropdown-link {
@@ -58,27 +614,43 @@
 }
 
 .login-btn {
-    height: 35px;
-    background: #5778ff;
-    border-radius: 10px;
-    font-weight: 400;
-    font-size: 14px;
+    height: 48px;
+    background: linear-gradient(135deg, #4A90A4 0%, #83C5BE 100%);
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 16px;
     cursor: pointer;
     color: #fff;
-    line-height: 35px;
-    margin: 15px 30px 15px 30px;
+    line-height: 48px;
+    margin: 25px 30px 20px 30px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(74, 144, 164, 0.4);
+}
+
+.login-btn:hover {
+    background: linear-gradient(135deg, #3A7A8A 0%, #6BB6AA 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(74, 144, 164, 0.6);
 }
 
 .input-box {
     display: flex;
-    margin-top: 20px;
+    margin-top: 24px;
     align-items: center;
-    border-radius: 10px;
-    background: #f6f8fb;
-    border: 1px solid #e4e6ef;
-    height: 40px;
-    padding: 0 15px;
-    gap: 20px;
+    border-radius: 12px;
+    background: rgba(248, 250, 252, 0.8);
+    border: 2px solid rgba(226, 232, 240, 0.8);
+    height: 50px;
+    padding: 0 18px;
+    gap: 16px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.input-box:focus-within {
+    border-color: rgba(74, 144, 164, 0.6);
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 0 3px rgba(74, 144, 164, 0.1);
 }
 
 ::v-deep {
@@ -102,7 +674,7 @@
         color: #3d4566;
     }
     .el-tabs__item.is-active {
-        color: #5778ff;
+        color: #4A90A4;
     }
     .el-tabs__nav-scroll {
         padding: 0 30px;
@@ -110,20 +682,19 @@
     .el-input__inner {
         border: none;
         background-color: transparent;
-        height: 56px;
+        height: 50px;
         padding: 0;
+        font-size: 15px;
+        color: #374151;
+    }
+    .el-input__inner::placeholder {
+        color: #9ca3af;
+        font-weight: 400;
     }
 }
 
-.login-person {
-    width: 500px;
-    color: #fff;
-    position: absolute;
-    top: 50%;
-    left: 25%;
-    transform: translate(-50%, -50%);
-    z-index: 1;
-}
+
+/* .login-person 样式已移除，因为不再使用左侧图片 */
 
 
 /* 移动端适配样式 */
@@ -132,7 +703,9 @@
     .welcome {
         min-width: unset;
         min-height: unset;
-        background: linear-gradient(145deg, #f5f8fd, #6baaff, #9ebbfc, #f5f8fd);
+        background: linear-gradient(-45deg, #4A90A4, #83C5BE, #FFDDD2, #5fb3c7, #6BB6AA, #74A9BC);
+        background-size: 400% 400%;
+        animation: gradient-flow 15s ease infinite;
     }
     .login-box {
         position: relative;
@@ -141,26 +714,28 @@
         transform: none;
         width: 90%;
         margin: 20px auto;
-        padding: 20px 0;
-        border-radius: 15px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        padding: 30px 0;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(10px);
+        background-color: rgba(255, 255, 255, 0.95);
     }
     .login-person {
         /* 在移动端隐藏大图 */
         display: none;
     }
     .input-box {
-        margin-top: 15px;
-        height: 38px;
+        margin-top: 18px;
+        height: 45px;
     }
     .login-text {
         font-size: 24px;
     }
     .login-btn {
-        margin: 20px 20px;
-        height: 40px;
-        line-height: 40px;
-        border-radius: 8px;
+        margin: 25px 20px;
+        height: 45px;
+        line-height: 45px;
+        border-radius: 12px;
     }
     /* 调整表单容器内的间距 */
     .el-main {
@@ -174,5 +749,42 @@
         margin-top: 15px !important;
         flex-direction: row !important;
         align-items: center !important;
+    }
+    /* 移动端手机号输入区域优化 */
+    .mobile-flex {
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 8px !important;
+        width: 100% !important;
+    }
+    .mobile-flex .el-select {
+        width: 90px !important;
+        margin-right: 0 !important;
+        flex-shrink: 0 !important;
+    }
+    .mobile-flex .el-input {
+        flex: 1 !important;
+        min-width: 0 !important;
+    }
+    /* 移动端区号选择器样式优化 */
+    .mobile-flex .el-select .el-input {
+        font-size: 13px !important;
+    }
+    .mobile-flex .el-select .el-input__inner {
+        padding-left: 8px !important;
+        padding-right: 20px !important;
+    }
+    /* 移动端Element UI组件优化 */
+    .input-box .mobile-flex .el-select .el-input__inner {
+        border: none !important;
+        background: transparent !important;
+        height: 48px !important;
+        line-height: 48px !important;
+    }
+    .input-box .mobile-flex .el-input .el-input__inner {
+        border: none !important;
+        background: transparent !important;
+        height: 48px !important;
+        padding-left: 4px !important;
     }
 }

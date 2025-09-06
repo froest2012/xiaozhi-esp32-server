@@ -1,24 +1,46 @@
 <template>
-  <div class="welcome" @keyup.enter="register">
+  <div class="welcome" :class="themeClass" @keyup.enter="register">
     <el-container style="height: 100%;">
       <!-- 保持相同的头部 -->
       <el-header>
-        <div style="display: flex;align-items: center;margin-top: 15px;margin-left: 10px;gap: 10px;">
-          <img loading="lazy" alt="" src="@/assets/xiaozhi-logo.png" style="width: 45px;height: 45px;" />
-          <img loading="lazy" alt="" src="@/assets/xiaozhi-ai.png" style="height: 18px;" />
+        <div style="display: flex;align-items: center;justify-content: space-between;margin-top: 15px;margin-left: 20px;margin-right: 20px;gap: 10px;">
+          <div class="app-title" style="font-size: 24px; font-weight: 700; letter-spacing: 1px; transition: all 0.3s ease;">AI小新-智控台</div>
+          <div class="theme-selector">
+            <el-dropdown @command="changeBackgroundTheme" trigger="hover">
+              <div class="theme-button">
+                🎨 <i class="el-icon-arrow-down"></i>
+              </div>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="flow" :class="{'active-theme': currentTheme === 'flow'}">
+                  🌊 流动渐变
+                </el-dropdown-item>
+                <el-dropdown-item command="bubbles" :class="{'active-theme': currentTheme === 'bubbles'}">
+                  ☁️ 优雅光晕
+                </el-dropdown-item>
+                <el-dropdown-item command="particles" :class="{'active-theme': currentTheme === 'particles'}">
+                  ✨ 粒子星空
+                </el-dropdown-item>
+                <el-dropdown-item command="geometric" :class="{'active-theme': currentTheme === 'geometric'}">
+                  🔷 现代几何
+                </el-dropdown-item>
+                <el-dropdown-item command="breathing" :class="{'active-theme': currentTheme === 'breathing'}">
+                  💫 呼吸光晕
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
         </div>
       </el-header>
-      <div class="login-person" :class="{'mobile': isMobile}">
-        <img loading="lazy" alt="" src="@/assets/login/register-person.png" style="width: 100%;" />
-      </div>
-      <el-main style="position: relative;">
+      <el-main style="position: relative; display: flex; align-items: center; justify-content: center;">
         <div class="login-box">
           <!-- 修改标题部分 -->
-          <div style="display: flex;align-items: center;gap: 20px;margin-bottom: 39px;padding: 0 30px;">
-            <img loading="lazy" alt="" src="@/assets/login/hi.png" style="width: 34px;height: 34px;" />
-            <div class="login-text">注册</div>
-            <div class="login-welcome">
-              WELCOME TO REGISTER
+          <div class="login-header">
+            <div class="login-icon-wrapper">
+              <div class="login-icon">🎉</div>
+            </div>
+            <div class="login-title-group">
+              <div class="login-text">注册</div>
+              <div class="login-welcome">WELCOME TO REGISTER</div>
             </div>
           </div>
 
@@ -33,12 +55,13 @@
               <!-- 手机号注册部分 -->
               <template v-if="enableMobileRegister">
                 <div class="input-box">
+                  <img loading="lazy" alt="" class="input-icon" src="@/assets/login/phone.png" />
                   <div style="display: flex; align-items: center; width: 100%;" :class="{'mobile-flex': isMobile}">
-                    <el-select v-model="form.areaCode" :style="isMobile ? 'width: 120px; margin-right: 5px;' : 'width: 220px; margin-right: 10px;'">
+                    <el-select v-model="form.areaCode" :style="isMobile ? 'width: 90px; margin-right: 0;' : 'width: 120px; margin-right: 8px;'" placeholder="+86">
                       <el-option v-for="item in mobileAreaList" :key="item.key" :label="isMobile ? item.key : `${item.name} (${item.key})`"
                         :value="item.key" />
                     </el-select>
-                    <el-input v-model="form.mobile" placeholder="请输入手机号码" />
+                    <el-input v-model="form.mobile" placeholder="请输入手机号码" style="flex: 1;" />
                   </div>
                 </div>
 
@@ -47,8 +70,10 @@
                     <img loading="lazy" alt="" class="input-icon" src="@/assets/login/shield.png" />
                     <el-input v-model="form.captcha" placeholder="请输入验证码" style="flex: 1;" />
                   </div>
-                  <img loading="lazy" v-if="captchaUrl" :src="captchaUrl" alt="验证码"
-                    :style="isMobile ? 'width: 100px; height: 38px; cursor: pointer;' : 'width: 150px; height: 40px; cursor: pointer;'" @click="fetchCaptcha" />
+                  <div class="captcha-container">
+                    <img loading="lazy" v-if="captchaUrl" :src="captchaUrl" alt="验证码"
+                      :style="isMobile ? 'width: 100px; height: 38px; cursor: pointer;' : 'width: 150px; height: 40px; cursor: pointer;'" @click="fetchCaptcha" />
+                  </div>
                 </div>
 
                 <!-- 手机验证码 -->
@@ -85,14 +110,15 @@
                   <img loading="lazy" alt="" class="input-icon" src="@/assets/login/shield.png" />
                   <el-input v-model="form.captcha" placeholder="请输入验证码" style="flex: 1;" />
                 </div>
-                <img loading="lazy" v-if="captchaUrl" :src="captchaUrl" alt="验证码"
-                  :style="isMobile ? 'width: 100px; height: 38px; cursor: pointer;' : 'width: 150px; height: 40px; cursor: pointer;'" @click="fetchCaptcha" />
+                <div class="captcha-container">
+                  <img loading="lazy" v-if="captchaUrl" :src="captchaUrl" alt="验证码"
+                    :style="isMobile ? 'width: 100px; height: 38px; cursor: pointer;' : 'width: 150px; height: 40px; cursor: pointer;'" @click="fetchCaptcha" />
+                </div>
               </div>
 
               <!-- 修改底部链接 -->
-              <div class="auth-links">
-                <div @click="goToLogin">已有账号？立即登录</div>
-                <div></div>
+              <div style="font-weight: 400;font-size: 14px;text-align: left;color: #5778ff;margin-top: 20px;">
+                <div style="cursor: pointer;" @click="goToLogin">已有账号？立即登录</div>
               </div>
             </form>
           </div>
@@ -101,11 +127,11 @@
           <div class="login-btn" @click="register">立即注册</div>
 
           <!-- 保持相同的协议声明 -->
-          <div class="auth-agreement">
+          <div style="font-size: 14px;color: #979db1;">
             注册即同意
-            <span class="agreement-link">《用户协议》</span>
+            <div style="display: inline-block;color: #5778FF;cursor: pointer;">《用户协议》</div>
             和
-            <span class="agreement-link">《隐私政策》</span>
+            <div style="display: inline-block;color: #5778FF;cursor: pointer;">《隐私政策》</div>
           </div>
         </div>
       </el-main>
@@ -140,6 +166,9 @@ export default {
     },
     isMobile() {
       return this.mobileDeviceDetected;
+    },
+    themeClass() {
+      return `theme-${this.currentTheme}`;
     }
   },
   data() {
@@ -157,7 +186,8 @@ export default {
       captchaUrl: '',
       countdown: 0,
       timer: null,
-      mobileDeviceDetected: false
+      mobileDeviceDetected: false,
+      currentTheme: localStorage.getItem('backgroundTheme') || 'flow'
     }
   },
   mounted() {
@@ -186,6 +216,21 @@ export default {
   methods: {
     checkDeviceType() {
       this.mobileDeviceDetected = isMobileDevice();
+    },
+    changeBackgroundTheme(theme) {
+      this.currentTheme = theme;
+      localStorage.setItem('backgroundTheme', theme);
+      this.$message.success(`已切换到${this.getThemeName(theme)}主题`);
+    },
+    getThemeName(theme) {
+      const names = {
+        flow: '流动渐变',
+        bubbles: '浮动气泡',
+        particles: '粒子星空',
+        geometric: '几何图案',
+        breathing: '呼吸光晕'
+      };
+      return names[theme] || '未知主题';
     },
     // 复用验证码获取方法
     fetchCaptcha() {
@@ -322,44 +367,39 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/auth-antd.scss';
+@import './auth.scss';
 
 .send-captcha-btn {
   height: 38px;
   width: 120px;
   padding: 0;
-  background-color: #5778ff;
-  border-color: #5778ff;
+  background: linear-gradient(135deg, #4A90A4 0%, #83C5BE 100%);
+  border: none;
+  border-radius: 8px;
   color: white;
+  transition: all 0.3s ease;
 
   &:hover,
   &:focus {
-    background-color: #4a6ae8;
-    border-color: #4a6ae8;
+    background: linear-gradient(135deg, #3A7A8A 0%, #6BB6AA 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(74, 144, 164, 0.4);
   }
 
   &:active {
-    background-color: #3d5cd6;
-    border-color: #3d5cd6;
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(74, 144, 164, 0.4);
   }
 
   &:disabled {
-    background-color: #a0aec0;
-    border-color: #a0aec0;
+    background: #a0aec0;
+    border: none;
+    transform: none;
+    box-shadow: none;
   }
 }
 
-/* 移动端特定样式 */
-.mobile-flex {
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-.mobile-captcha {
-  flex-direction: column;
-  align-items: center;
-}
+/* 移动端样式已移至 auth.scss 全局样式文件 */
 
 @media screen and (max-width: 768px) {
   .el-select {

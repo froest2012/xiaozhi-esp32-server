@@ -8,7 +8,64 @@ textarea:-webkit-autofill:focus,
 select:-webkit-autofill,
 select:-webkit-autofill:hover,
 select:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0px 1000px transparent inset;
-  transition: background-color 5000s ease-in-out 0s;
-  background-color: transparent;
+    -webkit-box-shadow: 0 0 0px 1000px transparent inset;
+    transition: background-color 5000s ease-in-out 0s;
+    background-color: transparent;
+}
+
+// 全局主题色彩覆盖
+:root {
+    --el-color-primary: #4A90A4;
+    --el-color-primary-light-1: #5a9fb1;
+    --el-color-primary-light-2: #6aaebe;
+    --el-color-primary-light-3: #7abdcb;
+    --el-color-primary-light-4: #8accd8;
+    --el-color-primary-light-5: #9adbe5;
+    --el-color-primary-light-6: #eaeaf6;
+    --el-color-primary-light-7: #f0f0f7;
+    --el-color-primary-light-8: #f6f6f8;
+    --el-color-primary-light-9: #fafafc;
+    --el-color-primary-dark-1: #428294;
+    --el-color-primary-dark-2: #3a7384;
+}
+
+// Element UI 主题色覆盖
+.el-button--primary {
+    background: linear-gradient(135deg, #4A90A4 0%, #83C5BE 100%) !important;
+    border: none !important;
+    &:hover,
+    &:focus {
+        background: linear-gradient(135deg, #5b5bf6 0%, #7c3aed 100%) !important;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    }
+    &:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+    }
+}
+
+// 链接颜色
+.el-link--primary {
+    color: #6366f1 !important;
+    &:hover {
+        color: #5b5bf6 !important;
+    }
+}
+
+// 消息提示主题色
+.el-message--success .el-message__icon {
+    color: #10b981 !important;
+}
+
+.el-message--error .el-message__icon {
+    color: #ef4444 !important;
+}
+
+.el-message--warning .el-message__icon {
+    color: #f59e0b !important;
+}
+
+.el-message--info .el-message__icon {
+    color: #6366f1 !important;
 }

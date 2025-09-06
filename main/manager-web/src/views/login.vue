@@ -1,22 +1,44 @@
 <template>
-  <div class="welcome">
+  <div class="welcome" :class="themeClass">
     <el-container style="height: 100%;">
       <el-header>
-        <div style="display: flex;align-items: center;margin-top: 15px;margin-left: 10px;gap: 10px;">
-          <img loading="lazy" alt="" src="@/assets/xiaozhi-logo.png" style="width: 45px;height: 45px;" />
-          <img loading="lazy" alt="" src="@/assets/xiaozhi-ai.png" style="height: 18px;" />
+        <div style="display: flex;align-items: center;justify-content: space-between;margin-top: 15px;margin-left: 20px;margin-right: 20px;gap: 10px;">
+          <div class="app-title" style="font-size: 24px; font-weight: 700; letter-spacing: 1px; transition: all 0.3s ease;">AI小新-智控台</div>
+          <div class="theme-selector">
+            <el-dropdown @command="changeBackgroundTheme" trigger="hover">
+              <div class="theme-button">
+                🎨 <i class="el-icon-arrow-down"></i>
+              </div>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="flow" :class="{'active-theme': currentTheme === 'flow'}">
+                  🌊 流动渐变
+                </el-dropdown-item>
+                <el-dropdown-item command="bubbles" :class="{'active-theme': currentTheme === 'bubbles'}">
+                  ☁️ 优雅光晕
+                </el-dropdown-item>
+                <el-dropdown-item command="particles" :class="{'active-theme': currentTheme === 'particles'}">
+                  ✨ 粒子星空
+                </el-dropdown-item>
+                <el-dropdown-item command="geometric" :class="{'active-theme': currentTheme === 'geometric'}">
+                  🔷 现代几何
+                </el-dropdown-item>
+                <el-dropdown-item command="breathing" :class="{'active-theme': currentTheme === 'breathing'}">
+                  💫 呼吸光晕
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
         </div>
       </el-header>
-      <div class="login-person" :class="{'mobile': isMobile}">
-        <img loading="lazy" alt="" src="@/assets/login/login-person.png" style="width: 100%;" />
-      </div>
-      <el-main style="position: relative;">
+      <el-main style="position: relative; display: flex; align-items: center; justify-content: center;">
         <div class="login-box" @keyup.enter="login">
-          <div style="display: flex;align-items: center;gap: 20px;margin-bottom: 30px;padding: 0 30px;">
-            <img loading="lazy" alt="" src="@/assets/login/hi.png" style="width: 34px;height: 34px;" />
-            <div class="login-text">登录</div>
-            <div class="login-welcome">
-              WELCOME TO LOGIN
+          <div class="login-header">
+            <div class="login-icon-wrapper">
+              <div class="login-icon">👋</div>
+            </div>
+            <div class="login-title-group">
+              <div class="login-text">登录</div>
+              <div class="login-welcome">WELCOME TO LOGIN</div>
             </div>
           </div>
           <div style="padding: 0 30px;">
@@ -51,12 +73,15 @@
                 <img loading="lazy" alt="" class="input-icon" src="@/assets/login/shield.png" />
                 <el-input v-model="form.captcha" placeholder="请输入验证码" style="flex: 1;" />
               </div>
-              <img loading="lazy" v-if="captchaUrl" :src="captchaUrl" alt="验证码"
-                :style="isMobile ? 'width: 100px; height: 38px; cursor: pointer;' : 'width: 150px; height: 40px; cursor: pointer;'" @click="fetchCaptcha" />
+              <div class="captcha-container">
+                <img loading="lazy" v-if="captchaUrl" :src="captchaUrl" alt="验证码"
+                  :style="isMobile ? 'width: 100px; height: 38px; cursor: pointer;' : 'width: 150px; height: 40px; cursor: pointer;'" @click="fetchCaptcha" />
+              </div>
             </div>
-            <div class="auth-links">
-              <div v-if="allowUserRegister" @click="goToRegister">新用户注册</div>
-              <div @click="goToForgetPassword" v-if="enableMobileRegister">忘记密码?</div>
+            <div
+              style="font-weight: 400;font-size: 14px;text-align: left;color: #5778ff;display: flex;justify-content: space-between;margin-top: 20px;">
+              <div v-if="allowUserRegister" style="cursor: pointer;" @click="goToRegister">新用户注册</div>
+              <div style="cursor: pointer;" @click="goToForgetPassword" v-if="enableMobileRegister">忘记密码?</div>
             </div>
           </div>
           <div class="login-btn" @click="login">登录</div>
@@ -73,11 +98,11 @@
             </el-tooltip>
           </div>
 
-          <div class="auth-agreement">
+          <div style="font-size: 14px;color: #979db1;margin-top: 10px;">
             登录即同意
-            <span class="agreement-link">《用户协议》</span>
+            <div style="display: inline-block;color: #5778FF;cursor: pointer;">《用户协议》</div>
             和
-            <span class="agreement-link">《隐私政策》</span>
+            <div style="display: inline-block;color: #5778FF;cursor: pointer;">《隐私政策》</div>
           </div>
         </div>
       </el-main>
@@ -107,6 +132,9 @@ export default {
     }),
     isMobile() {
       return this.mobileDeviceDetected;
+    },
+    themeClass() {
+      return `theme-${this.currentTheme}`;
     }
   },
   data() {
@@ -123,7 +151,8 @@ export default {
       captchaUuid: '',
       captchaUrl: '',
       isMobileLogin: false,
-      mobileDeviceDetected: false
+      mobileDeviceDetected: false,
+      currentTheme: localStorage.getItem('backgroundTheme') || 'flow'
     }
   },
   mounted() {
@@ -143,6 +172,21 @@ export default {
   methods: {
     checkDeviceType() {
       this.mobileDeviceDetected = isMobileDevice();
+    },
+    changeBackgroundTheme(theme) {
+      this.currentTheme = theme;
+      localStorage.setItem('backgroundTheme', theme);
+      this.$message.success(`已切换到${this.getThemeName(theme)}主题`);
+    },
+    getThemeName(theme) {
+      const names = {
+        flow: '流动渐变',
+        bubbles: '优雅光晕',
+        particles: '粒子星空',
+        geometric: '现代几何',
+        breathing: '呼吸光晕'
+      };
+      return names[theme] || '未知主题';
     },
     fetchCaptcha() {
       if (this.$store.getters.getToken) {
@@ -236,28 +280,28 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-@import '../styles/auth-antd.scss';
+@import './auth.scss';
 
 .login-type-container {
-  margin: 16px 20px;
-  display: flex;
-  gap: 12px;
-  justify-content: center;
+  margin: 10px 20px;
 }
 
 :deep(.el-button--primary) {
-  background-color: #5778ff;
-  border-color: #5778ff;
+  background: linear-gradient(135deg, #4A90A4 0%, #83C5BE 100%);
+  border: none;
+  border-radius: 8px;
+  transition: all 0.3s ease;
 
   &:hover,
   &:focus {
-    background-color: #4a6ae8;
-    border-color: #4a6ae8;
+    background: linear-gradient(135deg, #3A7A8A 0%, #6BB6AA 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(74, 144, 164, 0.4);
   }
 
   &:active {
-    background-color: #3d5cd6;
-    border-color: #3d5cd6;
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(74, 144, 164, 0.4);
   }
 }
 
