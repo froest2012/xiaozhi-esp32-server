@@ -41,7 +41,8 @@ nav {
   width: 100%;
 }
 
-.el-message {
+/* Ant Design 消息提示样式调整 */
+.ant-message {
   top: 70px !important;
 }
 </style>

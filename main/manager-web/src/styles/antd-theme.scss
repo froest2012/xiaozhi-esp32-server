@@ -1,0 +1,153 @@
+// Ant Design Vue 主题定制
+// 保持小智的品牌色彩 #5778FF
+
+// 主色调
+$primary-color: #5778FF;
+$link-color: #5778FF;
+$success-color: #52c41a;
+$warning-color: #faad14;
+$error-color: #ff4d4f;
+
+// 字体和排版
+$font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+$font-size-base: 14px;
+$line-height-base: 1.5715;
+
+// 边框圆角
+$border-radius-base: 6px;
+$border-radius-sm: 2px;
+
+// 间距
+$layout-header-height: 64px;
+$layout-header-padding: 0 50px;
+$layout-footer-padding: 24px 50px;
+$layout-sider-background: #001529;
+$layout-body-background: #f0f2f5;
+
+// 组件特定样式
+.ant-layout-header {
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  
+  .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 18px;
+      font-weight: 600;
+      color: $primary-color;
+      
+      img {
+        width: 32px;
+        height: 32px;
+        margin-right: 12px;
+      }
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      
+      .avatar {
+        margin-right: 8px;
+      }
+    }
+  }
+}
+
+.ant-layout-sider {
+  .logo {
+    height: 64px;
+    margin: 16px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: $border-radius-base;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+  }
+}
+
+.ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  background-color: $primary-color;
+}
+
+.ant-menu-dark .ant-menu-item:hover,
+.ant-menu-dark .ant-menu-item-active,
+.ant-menu-dark .ant-menu-submenu-title:hover {
+  color: #fff;
+  background-color: rgba($primary-color, 0.8);
+}
+
+// 表格样式优化
+.ant-table {
+  .ant-table-thead > tr > th {
+    background: #fafafa;
+    font-weight: 600;
+  }
+}
+
+// 卡片样式
+.ant-card {
+  border-radius: $border-radius-base;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+// 按钮样式
+.ant-btn-primary {
+  background-color: $primary-color;
+  border-color: $primary-color;
+  
+  &:hover,
+  &:focus {
+    background-color: lighten($primary-color, 10%);
+    border-color: lighten($primary-color, 10%);
+  }
+}
+
+// 页面内容区域
+.page-container {
+  padding: 24px;
+  background: #fff;
+  min-height: calc(100vh - 64px);
+}
+
+.page-header {
+  margin-bottom: 24px;
+  
+  .page-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.85);
+    margin-bottom: 8px;
+  }
+  
+  .page-description {
+    color: rgba(0, 0, 0, 0.45);
+    font-size: 14px;
+  }
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+  .ant-layout-header {
+    padding: 0 16px;
+  }
+  
+  .page-container {
+    padding: 16px;
+  }
+  
+  .ant-layout-sider {
+    .logo {
+      margin: 16px 8px;
+    }
+  }
+}
