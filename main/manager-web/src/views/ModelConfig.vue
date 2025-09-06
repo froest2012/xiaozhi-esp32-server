@@ -2,64 +2,30 @@
   <div class="welcome">
     <HeaderBar />
 
-    <div class="operation-bar">
-      <h2 class="page-title">{{ modelTypeText }}</h2>
-      <div v-if="!isMobile" class="action-group">
-        <div class="search-group">
-          <el-input placeholder="请输入模型名称查询" v-model="search" class="search-input" clearable
-            @keyup.enter.native="handleSearch" style="width: 240px" />
-          <el-button class="btn-search" @click="handleSearch">
-            搜索
-          </el-button>
+    <!-- 模型类型选择器 -->
+    <div class="model-types-selector">
+      <div class="selector-container">
+        <div
+          v-for="modelType in modelTypes"
+          :key="modelType.key"
+          class="model-type-item"
+          :class="{ 'active': activeTab === modelType.key }"
+          @click="handleModelTypeChange(modelType.key)">
+          <div class="item-icon">{{ modelType.icon }}</div>
+          <div class="item-text">{{ modelType.name }}</div>
+          <div class="item-status" :class="getStatusClass(modelType.key)"></div>
         </div>
+      </div>
+      <div class="action-section">
+        <el-button type="primary" icon="el-icon-plus" @click="addModel" class="add-model-btn">
+          新增模型
+        </el-button>
       </div>
     </div>
 
-    <!-- 主体内容 -->
+    <!-- 当前选中的模型配置详情 -->
     <div class="main-wrapper">
-      <div class="content-panel" :class="{ 'mobile-layout': isMobile }">
-        <!-- 左侧导航 -->
-        <div class="nav-container" :class="{ 'mobile-nav': isMobile }">
-          <!-- 移动端搜索框 -->
-          <div v-if="isMobile" class="mobile-search-container">
-            <el-input placeholder="搜索模型" v-model="search" class="mobile-search-input" clearable
-              @keyup.enter.native="handleSearch" size="small">
-              <template slot="suffix">
-                <el-button class="search-btn" @click="handleSearch" type="text" size="mini">
-                  <i class="el-icon-search"></i>
-                </el-button>
-              </template>
-            </el-input>
-          </div>
-
-          <el-menu :default-active="activeTab" :class="['nav-panel', { 'mobile-nav-panel': isMobile }]" @select="handleMenuSelect"
-            :mode="isMobile ? 'horizontal' : 'vertical'"
-            style="background-size: cover; background-position: center;">
-            <el-menu-item index="vad">
-              <span class="menu-text">{{ isMobile ? 'VAD' : '语言活动检测' }}</span>
-            </el-menu-item>
-            <el-menu-item index="asr">
-              <span class="menu-text">{{ isMobile ? 'ASR' : '语音识别' }}</span>
-            </el-menu-item>
-            <el-menu-item index="llm">
-              <span class="menu-text">{{ isMobile ? 'LLM' : '大语言模型' }}</span>
-            </el-menu-item>
-            <el-menu-item index="vllm">
-              <span class="menu-text">{{ isMobile ? 'VLLM' : '视觉大模型' }}</span>
-            </el-menu-item>
-            <el-menu-item index="intent">
-              <span class="menu-text">{{ isMobile ? 'Intent' : '意图识别' }}</span>
-            </el-menu-item>
-            <el-menu-item index="tts">
-              <span class="menu-text">{{ isMobile ? 'TTS' : '语音合成' }}</span>
-            </el-menu-item>
-            <el-menu-item index="memory">
-              <span class="menu-text">{{ isMobile ? 'Memory' : '记忆' }}</span>
-            </el-menu-item>
-          </el-menu>
-        </div>
-
-        <!-- 右侧内容 -->
+      <div class="content-panel">
         <div class="content-area">
           <el-card class="model-card" shadow="never">
             <el-table ref="modelTable" style="width: 100%" v-loading="loading" element-loading-text="拼命加载中"
@@ -94,17 +60,19 @@
                   </el-button>
                 </template>
               </el-table-column>
-              <el-table-column label="操作" align="center" width="180px">
+              <el-table-column label="操作" align="center" width="120px">
                 <template slot-scope="scope">
-                  <el-button type="text" size="mini" @click="editModel(scope.row)" class="edit-btn">
-                    修改
-                  </el-button>
-                  <el-button type="text" size="mini" @click="duplicateModel(scope.row)" class="edit-btn">
-                    创建副本
-                  </el-button>
-                  <el-button type="text" size="mini" @click="deleteModel(scope.row)" class="delete-btn">
-                    删除
-                  </el-button>
+                  <div class="action-buttons-vertical">
+                    <el-button type="text" size="mini" @click="editModel(scope.row)" class="edit-btn">
+                      修改
+                    </el-button>
+                    <el-button type="text" size="mini" @click="duplicateModel(scope.row)" class="duplicate-btn">
+                      创建副本
+                    </el-button>
+                    <el-button type="text" size="mini" @click="deleteModel(scope.row)" class="delete-btn">
+                      删除
+                    </el-button>
+                  </div>
                 </template>
               </el-table-column>
             </el-table>
@@ -169,7 +137,6 @@ export default {
     return {
       addDialogVisible: false,
       activeTab: 'llm',
-      search: '',
       editDialogVisible: false,
       editModelData: {},
       ttsDialogVisible: false,
@@ -182,7 +149,51 @@ export default {
       selectedModels: [],
       isAllSelected: false,
       loading: false,
-      selectedModelConfig: {}
+      selectedModelConfig: {},
+      modelTypes: [
+        {
+          key: 'llm',
+          name: '对话模型',
+          icon: '🤖',
+          description: '处理心理咨询对话的大语言模型'
+        },
+        {
+          key: 'asr',
+          name: '语音识别',
+          icon: '🎤',
+          description: '将语音转换为文字进行处理'
+        },
+        {
+          key: 'tts',
+          name: '语音合成',
+          icon: '🔊',
+          description: '将文字转换为温暖的语音回应'
+        },
+        {
+          key: 'vllm',
+          name: '视觉理解',
+          icon: '👁️',
+          description: '理解图像内容，辅助心理分析'
+        },
+        {
+          key: 'intent',
+          name: '意图识别',
+          icon: '🧭',
+          description: '识别用户的心理咨询意图'
+        },
+        {
+          key: 'memory',
+          name: '记忆模块',
+          icon: '🧠',
+          description: '记录和回顾咨询历史'
+        },
+        {
+          key: 'vad',
+          name: '语音检测',
+          icon: '📡',
+          description: '检测语音活动和情绪状态'
+        }
+      ]
     };
   },
 
@@ -205,6 +216,9 @@ export default {
         memory: '记忆模型(Memory)'
       }
       return map[this.activeTab] || '模型配置'
+    },
+    currentModelType() {
+      return this.modelTypes.find(type => type.key === this.activeTab) || this.modelTypes[0];
     },
     pageCount() {
       return Math.ceil(this.total / this.pageSize);
@@ -249,9 +263,19 @@ export default {
       this.pageSize = 10;     // 可选：重置每页条数
       this.loadData();
     },
-    handleSearch() {
+    handleModelTypeChange(modelKey) {
+      this.activeTab = modelKey;
       this.currentPage = 1;
       this.loadData();
+    },
+    getStatusClass(modelKey) {
+      // 模拟状态，实际应该根据模型列表数据来判断
+      const hasEnabledModels = this.activeTab === modelKey && this.modelList.some(model => model.isEnabled);
+      return hasEnabledModels ? 'active' : 'inactive';
+    },
+    getStatusText(modelKey) {
+      const hasEnabledModels = this.activeTab === modelKey && this.modelList.some(model => model.isEnabled);
+      return hasEnabledModels ? '已配置' : '未配置';
     },
     // 批量删除
     batchDelete() {
@@ -440,7 +464,6 @@ export default {
       this.loading = true; // 开始加载
       const params = {
         modelType: this.activeTab,
-        modelName: this.search,
         page: this.currentPage,
         limit: this.pageSize
       };
@@ -491,36 +514,646 @@ export default {
 </script>
 
 <style scoped>
-.el-switch {
-  height: 23px;
-}
-
-::v-deep .el-table tr {
-  background: transparent;
-}
-
 .welcome {
   min-width: 900px;
-  min-height: 506px;
+  min-height: 100vh;
   height: 100vh;
   display: flex;
-  position: relative;
   flex-direction: column;
-  background-size: cover;
-  background: linear-gradient(to bottom right, #dce8ff, #e4eeff, #e6cbfd) center;
-  -webkit-background-size: cover;
-  -o-background-size: cover;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%);
+  position: relative;
 }
 
-.main-wrapper {
-  margin: 5px 22px;
-  border-radius: 15px;
-  min-height: calc(100vh - 26vh);
-  height: auto;
-  max-height: 80vh;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+.welcome::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 30% 20%, rgba(102, 187, 106, 0.05), transparent 50%),
+              radial-gradient(circle at 70% 80%, rgba(165, 214, 167, 0.05), transparent 50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 操作区域样式 */
+.action-section {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+.add-model-btn {
+  height: 36px;
+  padding: 0 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  background: linear-gradient(135deg, #66bb6a 0%, #4ade80 100%);
+  border: none;
+  box-shadow: 0 2px 8px rgba(102, 187, 106, 0.2);
+  transition: all 0.3s ease;
+}
+
+.add-model-btn:hover {
+  background: linear-gradient(135deg, #5ca85c 0%, #22c55e 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 187, 106, 0.3);
+}
+
+/* 模型类型选择器 */
+.model-types-selector {
+  background: #ffffff;
+  border-bottom: 1px solid #f1f5f9;
+  padding: 16px 40px;
+  z-index: 2;
   position: relative;
-  background: rgba(237, 242, 255, 0.5);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.selector-container {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  min-width: 0;
+}
+
+.model-type-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+  position: relative;
+  min-width: 100px;
+  justify-content: center;
+  font-size: 13px;
+}
+
+.model-type-item:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.model-type-item.active {
+  background: linear-gradient(135deg, #66bb6a 0%, #4ade80 100%);
+  border-color: #66bb6a;
+  color: white;
+  box-shadow: 0 6px 20px rgba(102, 187, 106, 0.3);
+  transform: translateY(-2px);
+}
+
+.item-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.item-text {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.item-status {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #cbd5e1;
+  transition: all 0.3s ease;
+}
+
+.item-status.active {
+  background: #ffffff;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+}
+
+.model-type-item.active .item-status {
+  background: #ffffff;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+}
+
+/* 主内容区域 */
+.main-wrapper {
+  margin: 0 40px 40px;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f1f5f9;
+  overflow: hidden;
+  z-index: 2;
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.content-panel {
+  padding: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+
+.content-area {
+  padding: 24px 40px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.model-card {
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.model-card ::v-deep .el-card__body {
+  padding: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* 表格样式 */
+.data-table {
+  border-radius: 12px;
+  overflow: hidden;
+  background: white;
+  border: 1px solid #f1f5f9;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.data-table ::v-deep .el-table {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.data-table ::v-deep .el-table__body-wrapper {
+  flex: 1;
+  overflow-y: auto;
+  max-height: calc(100vh - 280px);
+}
+
+.data-table ::v-deep .el-table__header-wrapper {
+  background: #fafbfc;
+}
+
+.data-table ::v-deep .el-table__header th {
+  background: transparent;
+  color: #1f2937;
+  font-weight: 600;
+  font-size: 12px;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 12px 8px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.data-table ::v-deep .el-table__body td {
+  border-bottom: 1px solid #f3f4f6;
+  padding: 12px 8px;
+  font-size: 13px;
+  color: #1f2937;
+}
+
+.data-table ::v-deep .el-table__row:hover {
+  background: #f9fafb;
+}
+
+.data-table ::v-deep .el-table__row:hover td {
+  background: #f9fafb;
+}
+
+/* 开关样式 */
+::v-deep .el-switch.is-checked .el-switch__core {
+  background-color: #66BB6A;
+  border-color: #66BB6A;
+}
+
+/* 操作按钮容器 */
+.action-buttons {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+}
+
+.action-buttons-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 按钮样式 */
+.edit-btn, .duplicate-btn, .delete-btn, .voice-management-btn {
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: none;
+  margin: 0;
+  min-width: 60px;
+  width: 100%;
+}
+
+.edit-btn {
+  color: #3b82f6;
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+}
+
+.edit-btn:hover {
+  background: #dbeafe;
+  color: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.duplicate-btn {
+  color: #8b5cf6;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+}
+
+.duplicate-btn:hover {
+  background: #e5e7eb;
+  color: #7c3aed;
+  transform: translateY(-1px);
+}
+
+.delete-btn {
+  color: #ef4444;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+.delete-btn:hover {
+  background: #fecaca;
+  color: #dc2626;
+  transform: translateY(-1px);
+}
+
+.voice-management-btn {
+  background: linear-gradient(135deg, #66bb6a 0%, #4ade80 100%);
+  color: white;
+  border: none;
+  box-shadow: 0 2px 4px rgba(102, 187, 106, 0.2);
+}
+
+.voice-management-btn:hover {
+  background: linear-gradient(135deg, #5ca85c 0%, #22c55e 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(102, 187, 106, 0.3);
+}
+
+/* 表格底部操作区 */
+.table-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 40px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 0 0 16px 16px;
+}
+
+.batch-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.batch-actions .el-button {
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  transition: all 0.3s ease;
+  height: 40px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.batch-actions .el-button--primary {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
+}
+
+.batch-actions .el-button--primary:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+.batch-actions .el-button--success {
+  background: linear-gradient(135deg, #66bb6a 0%, #4ade80 100%);
+  color: white;
+}
+
+.batch-actions .el-button--success:hover {
+  background: linear-gradient(135deg, #5ca85c 0%, #22c55e 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 187, 106, 0.4);
+}
+
+.batch-actions .el-button--danger {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+}
+
+.batch-actions .el-button--danger:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+/* 分页器样式 */
+.custom-pagination {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pagination-info {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+  margin-left: 12px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 8px;
+  backdrop-filter: blur(5px);
+}
+
+.pagination-btn {
+  border: 1px solid rgba(209, 213, 219, 0.6);
+  background: rgba(255, 255, 255, 0.8);
+  color: #374151;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.pagination-btn:hover {
+  background: rgba(243, 244, 246, 0.9);
+  border-color: #9ca3af;
+  color: #1f2937;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.pagination-btn.active {
+  background: linear-gradient(135deg, #66bb6a 0%, #4ade80 100%);
+  color: white;
+  border-color: #66bb6a;
+  box-shadow: 0 4px 12px rgba(102, 187, 106, 0.3);
+  transform: translateY(-1px);
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: rgba(249, 250, 251, 0.8);
+  color: #9ca3af;
+  transform: none;
+}
+
+::v-deep .page-size-select .el-input__inner {
+  border-radius: 10px;
+  border: 1px solid rgba(209, 213, 219, 0.6);
+  background: rgba(255, 255, 255, 0.8);
+  height: 40px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+::v-deep .page-size-select .el-input__inner:focus {
+  border-color: #66bb6a;
+  box-shadow: 0 0 0 3px rgba(102, 187, 106, 0.1), 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+/* 中等屏幕适配 */
+@media screen and (max-width: 1024px) {
+  .model-types-selector {
+    gap: 16px;
+  }
+}
+
+/* 移动端适配 */
+@media screen and (max-width: 768px) {
+  .welcome {
+    min-width: unset;
+    padding: 0;
+  }
+
+  /* 模型类型选择器移动端适配 */
+  .model-types-selector {
+    padding: 12px 16px;
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .selector-container {
+    order: 1;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    gap: 6px;
+  }
+
+  .action-section {
+    order: 2;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .add-model-btn {
+    height: 32px;
+    padding: 0 16px;
+    font-size: 13px;
+  }
+
+  /* 模型类型选择器项目移动端适配 */
+  .model-type-item {
+    padding: 8px 12px;
+    min-width: 80px;
+    font-size: 12px;
+    gap: 6px;
+  }
+
+  .item-icon {
+    font-size: 14px;
+  }
+
+  /* 主内容区域移动端适配 */
+  .main-wrapper {
+    margin: 0 16px 16px;
+    border-radius: 12px;
+  }
+
+  .content-area {
+    padding: 16px;
+  }
+
+  /* 表格移动端适配 */
+  .data-table ::v-deep .el-table__body-wrapper {
+    max-height: calc(100vh - 200px);
+  }
+
+  .data-table ::v-deep .el-table__header th {
+    padding: 8px 4px;
+    font-size: 11px;
+  }
+
+  .data-table ::v-deep .el-table__body td {
+    padding: 8px 4px;
+    font-size: 12px;
+  }
+
+  /* 操作按钮移动端适配 */
+  .action-buttons-vertical {
+    gap: 2px;
+  }
+
+  .edit-btn, .duplicate-btn, .delete-btn, .voice-management-btn {
+    padding: 2px 6px;
+    font-size: 10px;
+    min-width: 50px;
+  }
+
+  /* 表格底部移动端适配 */
+  .table-footer {
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px 16px;
+  }
+
+  .batch-actions {
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .custom-pagination {
+    justify-content: center;
+  }
+
+  .pagination-btn {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .model-types-selector {
+    padding: 8px 12px;
+  }
+
+  .selector-container {
+    gap: 4px;
+  }
+
+  .model-type-item {
+    padding: 6px 10px;
+    min-width: 70px;
+    font-size: 11px;
+  }
+
+  .action-section {
+    justify-content: center;
+  }
+
+  .add-model-btn {
+    height: 30px;
+    padding: 0 12px;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  .main-wrapper {
+    margin: 0 8px 8px;
+  }
+
+  .content-area {
+    padding: 12px;
+  }
+
+  .data-table ::v-deep .el-table__header th {
+    padding: 6px 2px;
+    font-size: 10px;
+  }
+
+  .data-table ::v-deep .el-table__body td {
+    padding: 6px 2px;
+    font-size: 11px;
+  }
+
+  .model-type-item {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+
+  .item-icon {
+    font-size: 16px;
+  }
+
+  .main-wrapper {
+    margin: 0 20px 20px;
+  }
+
+  .content-header {
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+  }
+
+  .content-area {
+    padding: 20px;
+  }
 }
 
 .operation-bar {

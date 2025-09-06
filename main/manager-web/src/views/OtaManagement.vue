@@ -461,6 +461,11 @@ export default {
 .page-title {
     font-size: 24px;
     margin: 0;
+    background: linear-gradient(135deg, #4A90A4 0%, #83C5BE 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
 }
 
 .right-operations {
@@ -474,9 +479,18 @@ export default {
 }
 
 .btn-search {
-    background: linear-gradient(135deg, #6b8cff, #a966ff);
+    background: linear-gradient(135deg, #66bb6a 0%, #4ade80 100%);
     border: none;
     color: white;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(102, 187, 106, 0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-search:hover {
+    background: linear-gradient(135deg, #5ca85c 0%, #22c55e 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(102, 187, 106, 0.4);
 }
 
 .content-panel {
@@ -690,7 +704,7 @@ export default {
 
     .el-table__header th {
         background: white !important;
-        color: black;
+        color: #1f2937;
         font-weight: 600;
         height: 40px;
         padding: 8px 0;
@@ -706,7 +720,7 @@ export default {
             border-bottom: 1px solid rgba(0, 0, 0, 0.04);
             padding: 8px 0;
             height: 40px;
-            color: #606266;
+            color: #1f2937;
             font-size: 14px;
         }
     }
@@ -848,11 +862,14 @@ export default {
     .transparent-table.mobile-data-table ::v-deep .el-table__header th {
         padding: 6px 4px;
         font-size: 11px;
+        color: #1f2937;
+        font-weight: 600;
     }
 
     .transparent-table.mobile-data-table ::v-deep .el-table__body td {
         padding: 4px 4px;
         font-size: 11px;
+        color: #1f2937;
     }
 
     .mobile-checkbox ::v-deep .el-checkbox__inner {

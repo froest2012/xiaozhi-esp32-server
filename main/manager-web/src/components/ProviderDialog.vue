@@ -1,6 +1,6 @@
 <template>
   <el-dialog :visible="visible" :close-on-click-modal="false" @update:visible="handleVisibleChange" :width="isMobile ? '95%' : '57%'" center custom-class="custom-dialog"
-    :show-close="false" class="center-dialog">
+    :show-close="false" class="center-dialog" :modal="false">
 
     <div style="margin: 0 18px; text-align: left; padding: 10px; border-radius: 10px;">
       <div style="font-size: 30px; color: #3d4566; margin-top: -15px; margin-bottom: 20px; text-align: center;">

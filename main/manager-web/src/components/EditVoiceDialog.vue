@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :visible.sync="dialogVisible" width="900px" @close="handleClose" class="compact-dialog" :append-to-body="true">
+  <el-dialog :visible.sync="dialogVisible" width="900px" @close="handleClose" class="compact-dialog" :append-to-body="true" :modal="false">
     <el-form :model="voiceForm" :rules="rules" ref="voiceForm" label-width="80px">
       <el-row :gutter="20">
         <el-col :span="12">
@@ -98,52 +98,50 @@ export default {
 </script>
 
 <style scoped>
-.compact-dialog {
-  /deep/ .el-dialog__body {
-    padding: 20px;
-  }
+.compact-dialog ::v-deep .el-dialog__body {
+  padding: 20px;
+}
 
-  .el-form-item {
-    margin-bottom: 16px;
-  }
+.compact-dialog .el-form-item {
+  margin-bottom: 16px;
+}
 
-  .compact-input {
-    width: 100%;
-  }
+.compact-dialog .compact-input {
+  width: 100%;
+}
 
-  .compact-number {
-    width: 100%;
-    /deep/ .el-input__inner {
-      padding-right: 10px;
-    }
-  }
+.compact-dialog .compact-number {
+  width: 100%;
+}
 
-  .compact-textarea {
-    width: 100%;
-    margin-bottom: 8px;
-  }
+.compact-dialog .compact-number ::v-deep .el-input__inner {
+  padding-right: 10px;
+}
 
-  .audio-controls {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 16px;
-    margin-top: 8px;
+.compact-dialog .compact-textarea {
+  width: 100%;
+  margin-bottom: 8px;
+}
 
+.compact-dialog .audio-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+  margin-top: 8px;
+}
 
-    .preview-btn {
-      padding: 7px 15px;
-    }
-  }
+.compact-dialog .audio-controls .preview-btn {
+  padding: 7px 15px;
+}
 
-  .dialog-footer {
-    padding: 16px 20px 0;
-    text-align: right;
-    border-top: 1px solid #EBEEF5;
+.compact-dialog .dialog-footer {
+  padding: 16px 20px 0;
+  text-align: right;
+  border-top: 1px solid #EBEEF5;
+}
 
-    .el-button {
-      min-width: 80px;
-    }
-  }
+.compact-dialog .dialog-footer .el-button {
+  min-width: 80px;
 }
 </style>

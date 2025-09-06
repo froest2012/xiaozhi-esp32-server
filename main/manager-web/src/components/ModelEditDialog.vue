@@ -1,6 +1,6 @@
 <template>
   <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false" :width="isMobile ? '95%' : '57%'" center custom-class="custom-dialog" :show-close="false"
-    class="center-dialog" >
+    class="center-dialog" :modal="false">
     <div style="margin: 0 18px; text-align: left; padding: 10px; border-radius: 10px;">
       <div style="font-size: 30px; color: #3d4566; margin-top: -10px; margin-bottom: 10px; text-align: center;">
         {{ modelData.duplicateMode ? '创建副本' : '修改模型' }}
@@ -595,15 +595,17 @@ export default {
   font-size: 14px;
 }
 
-// 移动端保存按钮
+// 保存按钮
 .save-btn {
-  background: #e6f0fd;
-  color: #237ff4;
-  border: 1px solid #b3d1ff;
+  background: linear-gradient(135deg, #66bb6a 0%, #4ade80 100%);
+  color: #fff;
+  border: none;
   width: 150px;
   height: 40px;
   font-size: 16px;
+  font-weight: 600;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 187, 106, 0.3);
 
   &.mobile-save-btn {
     width: 120px;
@@ -613,9 +615,10 @@ export default {
 }
 
 .save-btn:hover {
-  background: linear-gradient(to right, #237ff4, #9c40d5);
-  color: white;
-  border: none;
+  background: linear-gradient(135deg, #5ca85c 0%, #22c55e 100%);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(102, 187, 106, 0.4);
 }
 
 .custom-switch .el-switch__core {

@@ -1,27 +1,25 @@
 <template>
   <el-dialog :visible="visible" @close="handleClose" :width="isMobile ? '80%' : '25%'" center @open="handleOpen">
-    <div
-      style="margin: 0 10px 10px;display: flex;align-items: center;gap: 10px;font-weight: 700;font-size: 20px;text-align: left;color: #3d4566;">
-      <div
-        style="width: 40px;height: 40px;border-radius: 50%;background: #5778ff;display: flex;align-items: center;justify-content: center;">
-        <img loading="lazy" src="@/assets/home/equipment.png" alt="" style="width: 18px;height: 15px;" />
+    <div class="dialog-header">
+      <div class="header-icon">
+        <img loading="lazy" src="@/assets/home/equipment.png" alt="" />
       </div>
-      添加智能体
+      <span class="header-title">创建心理助手</span>
     </div>
-    <div style="height: 1px;background: #e8f0ff;" />
-    <div style="margin: 22px 15px;">
-      <div style="font-weight: 400;text-align: left;color: #3d4566;">
-        <div style="color: red;display: inline-block;">*</div> 智能体名称：
+    <div class="dialog-divider"></div>
+    <div class="dialog-content">
+      <div class="input-label">
+        <span class="required">*</span> 助手名称：
       </div>
-      <div class="input-46" style="margin-top: 12px;">
-        <el-input ref="inputRef" placeholder="请输入智能体名称.." v-model="wisdomBodyName" @keyup.enter.native="confirm" />
+      <div class="input-container">
+        <el-input ref="inputRef" placeholder="请输入心理助手名称.." v-model="wisdomBodyName" @keyup.enter.native="confirm" />
       </div>
     </div>
-    <div style="display: flex;margin: 15px 15px;gap: 7px;">
-      <div class="dialog-btn" @click="confirm">
+    <div class="dialog-footer">
+      <div class="dialog-btn confirm-btn" @click="confirm">
         确定
       </div>
-      <div class="dialog-btn" style="background: #e6ebff;border: 1px solid #adbdff;color: #5778ff;" @click="cancel">
+      <div class="dialog-btn cancel-btn" @click="cancel">
         取消
       </div>
     </div>
@@ -87,28 +85,129 @@ export default {
 </script>
 
 <style scoped>
-.input-46 {
-  border: 1px solid #e4e6ef;
-  background: #f6f8fb;
+.dialog-header {
+  margin: 0 10px 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 700;
+  font-size: 20px;
+  text-align: left;
+  color: #3d4566;
+}
+
+.header-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4A90A4 0%, #83C5BE 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(74, 144, 164, 0.3);
+}
+
+.header-icon img {
+  width: 18px;
+  height: 15px;
+  filter: brightness(0) invert(1);
+}
+
+.header-title {
+  background: linear-gradient(135deg, #4A90A4 0%, #83C5BE 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.dialog-divider {
+  height: 1px;
+  background: linear-gradient(90deg,
+    rgba(74, 144, 164, 0.1) 0%,
+    rgba(74, 144, 164, 0.3) 50%,
+    rgba(74, 144, 164, 0.1) 100%);
+  margin: 0 10px;
+}
+
+.dialog-content {
+  margin: 22px 15px;
+}
+
+.input-label {
+  font-weight: 400;
+  text-align: left;
+  color: #3d4566;
+  margin-bottom: 12px;
+}
+
+.required {
+  color: #ff6b6b;
+  font-weight: 600;
+}
+
+.input-container {
+  border: 1px solid rgba(74, 144, 164, 0.2);
+  background: rgba(255, 255, 255, 0.8);
   border-radius: 15px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.input-container:focus-within {
+  border-color: rgba(74, 144, 164, 0.5);
+  box-shadow: 0 0 0 3px rgba(74, 144, 164, 0.1);
+}
+
+.dialog-footer {
+  display: flex;
+  margin: 15px 15px;
+  gap: 12px;
 }
 
 .dialog-btn {
   cursor: pointer;
   flex: 1;
-  border-radius: 23px;
-  background: #5778ff;
+  border-radius: 20px;
   height: 40px;
   font-weight: 500;
-  font-size: 12px;
-  color: #fff;
+  font-size: 14px;
   line-height: 40px;
   text-align: center;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+.confirm-btn {
+  background: linear-gradient(135deg, #4A90A4 0%, #83C5BE 100%);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(74, 144, 164, 0.3);
+}
+
+.confirm-btn:hover {
+  background: linear-gradient(135deg, #3A7A8A 0%, #6BB6AA 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(74, 144, 164, 0.4);
+}
+
+.cancel-btn {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(74, 144, 164, 0.3);
+  color: #4A90A4;
+  backdrop-filter: blur(10px);
+}
+
+.cancel-btn:hover {
+  background: rgba(74, 144, 164, 0.1);
+  border-color: rgba(74, 144, 164, 0.5);
+  transform: translateY(-1px);
 }
 
 ::v-deep .el-dialog {
-  border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(74, 144, 164, 0.2);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 ::v-deep .el-dialog__headerbtn {
@@ -121,6 +220,18 @@ export default {
 
 ::v-deep .el-dialog__header {
   padding: 10px;
+}
+
+::v-deep .el-input__inner {
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  padding: 12px 15px;
+}
+
+::v-deep .el-input__inner:focus {
+  background: transparent;
+  border: none;
 }
 
 /* 移动端适配样式 */
@@ -137,6 +248,11 @@ export default {
   .dialog-btn {
     height: 36px;
     line-height: 36px;
+    font-size: 13px;
+  }
+
+  .dialog-header {
+    font-size: 18px;
   }
 }
 </style>

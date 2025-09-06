@@ -8,24 +8,21 @@
         <div class="add-device">
           <div class="add-device-bg">
             <div class="hellow-text" style="margin-top: 30px;">
-              <span class="wave-emoji">👋</span> 你好，小智
+              <span class="wave-emoji">🌱</span> 你好，小新
             </div>
             <div class="hellow-text">
-              让我们度过
+              让我们一起
               <div style="display: inline-block;color: #4A90A4;">
-                美好的一天！ <span class="sparkle-emoji">✨</span>
+                成长与陪伴！ <span class="sparkle-emoji">🌟</span>
               </div>
             </div>
             <div class="hi-hint">
-              Hello, Let's have a wonderful day! <span class="heart-emoji">💙</span>
+              Together for growth and care <span class="heart-emoji">💚</span>
             </div>
-            <div class="add-device-btn">
-              <div class="left-add" @click="showAddDialog">
-                添加智能体
-              </div>
-              <div style="width: 23px;height: 13px;background: #4A90A4;margin-left: -10px;" />
-              <div class="right-add">
-                <i class="el-icon-plus" @click="showAddDialog" style="font-size: 20px;color: #fff;" />
+            <div class="add-device-btn" @click="showAddDialog">
+              <div class="add-btn-content">
+                <span class="add-btn-text">创建心理助手</span>
+                <i class="el-icon-plus add-btn-icon"></i>
               </div>
             </div>
           </div>
@@ -201,8 +198,8 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at 30% 20%, rgba(74, 144, 164, 0.05), transparent 50%),
-              radial-gradient(circle at 70% 80%, rgba(131, 197, 190, 0.05), transparent 50%);
+  background: radial-gradient(circle at 30% 20%, rgba(102, 187, 106, 0.05), transparent 50%),
+              radial-gradient(circle at 70% 80%, rgba(165, 214, 167, 0.05), transparent 50%);
   pointer-events: none;
   z-index: 1;
 }
@@ -213,11 +210,12 @@ export default {
   position: relative;
   overflow: hidden;
   background: linear-gradient(135deg,
-      rgba(74, 144, 164, 0.1) 0%,
-      rgba(131, 197, 190, 0.1) 50%,
-      rgba(255, 221, 210, 0.1) 100%);
-  box-shadow: 0 10px 30px rgba(74, 144, 164, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+      rgba(102, 187, 106, 0.1) 0%,
+      rgba(129, 199, 132, 0.1) 30%,
+      rgba(165, 214, 167, 0.1) 60%,
+      rgba(200, 230, 201, 0.1) 100%);
+  box-shadow: 0 10px 30px rgba(102, 187, 106, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   z-index: 2;
 }
 
@@ -226,10 +224,10 @@ export default {
   height: 100%;
   text-align: left;
   background: linear-gradient(135deg,
-    rgba(74, 144, 164, 0.1) 0%,
-    rgba(131, 197, 190, 0.15) 30%,
-    rgba(255, 221, 210, 0.1) 60%,
-    rgba(74, 144, 164, 0.05) 100%);
+    rgba(102, 187, 106, 0.1) 0%,
+    rgba(129, 199, 132, 0.15) 30%,
+    rgba(165, 214, 167, 0.1) 60%,
+    rgba(200, 230, 201, 0.08) 100%);
   overflow: hidden;
   position: relative;
   box-sizing: border-box;
@@ -242,7 +240,7 @@ export default {
   right: 10%;
   width: 150px;
   height: 150px;
-  background: radial-gradient(circle, rgba(131, 197, 190, 0.2) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(129, 199, 132, 0.2) 0%, transparent 70%);
   border-radius: 50%;
   animation: float 6s ease-in-out infinite;
 }
@@ -254,7 +252,7 @@ export default {
   left: 15%;
   width: 100px;
   height: 100px;
-  background: radial-gradient(circle, rgba(255, 221, 210, 0.3) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(200, 230, 201, 0.3) 0%, transparent 70%);
   border-radius: 50%;
   animation: float 8s ease-in-out infinite reverse;
 }
@@ -270,35 +268,40 @@ export default {
 
 .wave-emoji {
   display: inline-block;
-  animation: wave 2s ease-in-out infinite;
-  transform-origin: 70% 70%;
+  animation: grow 3s ease-in-out infinite;
+  transform-origin: center;
 }
 
-@keyframes wave {
-  0%, 40%, 100% {
-    transform: rotate(0deg);
+@keyframes grow {
+  0%, 100% {
+    transform: scale(1);
   }
-  10%, 30% {
-    transform: rotate(-10deg);
-  }
-  20% {
-    transform: rotate(12deg);
+  50% {
+    transform: scale(1.1);
   }
 }
 
 .sparkle-emoji {
   display: inline-block;
-  animation: sparkle 2s ease-in-out infinite;
+  animation: twinkle 2.5s ease-in-out infinite;
 }
 
-@keyframes sparkle {
+@keyframes twinkle {
   0%, 100% {
-    transform: scale(1);
+    transform: scale(1) rotate(0deg);
     opacity: 1;
   }
+  25% {
+    transform: scale(1.1) rotate(5deg);
+    opacity: 0.9;
+  }
   50% {
-    transform: scale(1.2);
+    transform: scale(1.2) rotate(-5deg);
     opacity: 0.8;
+  }
+  75% {
+    transform: scale(1.1) rotate(3deg);
+    opacity: 0.9;
   }
 }
 
@@ -334,50 +337,42 @@ export default {
 }
 
 .add-device-btn {
-  display: flex;
-  align-items: center;
+  display: inline-block;
   margin-left: 75px;
   margin-top: 15px;
   cursor: pointer;
 }
 
-.left-add {
-  width: 120px;
+.add-btn-content {
+  display: flex;
+  align-items: center;
   height: 40px;
   border-radius: 20px;
   background: linear-gradient(135deg, #4A90A4 0%, #83C5BE 100%);
   color: #fff;
   font-size: 15px;
   font-weight: 600;
-  text-align: center;
-  line-height: 40px;
+  padding: 0 20px;
+  gap: 10px;
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(74, 144, 164, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
 }
 
-.left-add:hover {
+.add-btn-content:hover {
   background: linear-gradient(135deg, #3A7A8A 0%, #6BB6AA 100%);
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(74, 144, 164, 0.4);
 }
 
-.right-add {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #4A90A4 0%, #83C5BE 100%);
-  margin-left: -8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(74, 144, 164, 0.3);
+.add-btn-text {
+  white-space: nowrap;
 }
 
-.right-add:hover {
-  background: linear-gradient(135deg, #3A7A8A 0%, #6BB6AA 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(74, 144, 164, 0.4);
+.add-btn-icon {
+  font-size: 16px;
+  font-weight: bold;
 }
 
 .device-list-container {

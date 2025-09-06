@@ -3,7 +3,6 @@
     <div class="header-container">
       <!-- 移动端用户信息 - 右上角 -->
       <div v-if="isMobile" class="mobile-user-info">
-        <img loading="lazy" alt="" src="@/assets/home/avatar.png" class="mobile-avatar-img" />
         <el-dropdown trigger="click" class="mobile-user-dropdown" @visible-change="handleUserDropdownVisibleChange">
           <span class="mobile-dropdown-link">
             {{ userInfo.username || '加载中...' }}
@@ -18,8 +17,7 @@
 
       <!-- 左侧元素 -->
       <div class="header-left" @click="goHome">
-        <img loading="lazy" alt="" src="@/assets/xiaozhi-logo.png" class="logo-img" />
-        <img loading="lazy" alt="" src="@/assets/xiaozhi-ai.png" class="brand-img" />
+        <div class="app-title">AI小新-智控台</div>
       </div>
 
       <!-- 中间导航菜单 -->
@@ -83,7 +81,6 @@
             <i slot="suffix" class="el-icon-search search-icon" @click="handleSearch"></i>
           </el-input>
         </div>
-        <img loading="lazy" alt="" src="@/assets/home/avatar.png" class="avatar-img" />
         <el-dropdown trigger="click" class="user-dropdown" @visible-change="handleUserDropdownVisibleChange">
           <span class="el-dropdown-link">
             {{ userInfo.username || '加载中...' }}
@@ -264,15 +261,19 @@ export default {
   align-items: center;
   gap: 10px;
   min-width: 120px;
+  cursor: pointer;
 }
 
-.logo-img {
-  width: 42px;
-  height: 42px;
-}
-
-.brand-img {
-  height: 20px;
+.app-title {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  color: #2c3e50;
+  background: linear-gradient(135deg, #4A90A4 0%, #83C5BE 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .header-center {
@@ -295,7 +296,7 @@ export default {
 .equipment-management {
   height: 30px;
   border-radius: 15px;
-  background: #deeafe;
+  background: rgba(255, 255, 255, 0.8);
   display: flex;
   justify-content: center;
   font-size: 14px;
@@ -310,11 +311,20 @@ export default {
   /* 防止导航按钮被压缩 */
   padding: 0 15px;
   position: relative;
+  border: 1px solid rgba(74, 144, 164, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.equipment-management:hover {
+  background: rgba(74, 144, 164, 0.1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(74, 144, 164, 0.2);
 }
 
 .equipment-management.active-tab {
-  background: #5778ff !important;
+  background: linear-gradient(135deg, #4A90A4 0%, #83C5BE 100%) !important;
   color: #fff !important;
+  box-shadow: 0 4px 12px rgba(74, 144, 164, 0.4);
 }
 
 .equipment-management img {
@@ -354,11 +364,6 @@ export default {
   height: 100%;
 }
 
-.avatar-img {
-  width: 21px;
-  height: 21px;
-  flex-shrink: 0;
-}
 
 .user-dropdown {
   flex-shrink: 0;
@@ -445,11 +450,6 @@ export default {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
-  .mobile-avatar-img {
-    width: 18px;
-    height: 18px;
-    flex-shrink: 0;
-  }
 
   .mobile-user-dropdown {
     flex-shrink: 0;
@@ -473,6 +473,10 @@ export default {
     width: 100%;
     justify-content: center;
     margin-top: 5px;
+  }
+
+  .app-title {
+    font-size: 20px;
   }
 
   .header-center {

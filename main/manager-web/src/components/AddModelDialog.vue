@@ -1,6 +1,6 @@
 <template>
   <el-dialog :visible="dialogVisible" @update:visible="handleVisibleChange" :width="isMobile ? '95%' : '57%'" center
-    custom-class="custom-dialog" :show-close="false" class="center-dialog">
+    :show-close="false" :modal="false">
     <div :class="['dialog-content', { 'mobile-content': isMobile }]">
       <div :class="['dialog-title', { 'mobile-title': isMobile }]">
         添加模型
@@ -261,30 +261,27 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.custom-dialog {
-  position: relative;
+// 弹窗样式
+::v-deep .el-dialog {
   border-radius: 20px;
-  overflow: hidden;
-  background: white;
-  padding-bottom: 17px;
+  box-shadow: 0 20px 60px rgba(74, 144, 164, 0.2);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-.custom-dialog .el-dialog__header {
-  padding: 0;
-  border-bottom: none;
+::v-deep .el-dialog__headerbtn {
+  display: none;
 }
 
-.center-dialog {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+::v-deep .el-dialog__body {
+  padding: 4px 6px;
 }
 
-.center-dialog .el-dialog {
-  margin: 0 0 auto !important;
-  display: flex;
-  flex-direction: column;
+::v-deep .el-dialog__header {
+  padding: 10px;
 }
+
 
 // 弹窗内容容器
 .dialog-content {
@@ -513,13 +510,15 @@ export default {
 }
 
 .save-btn {
-  background: #e6f0fd;
-  color: #237ff4;
-  border: 1px solid #b3d1ff;
+  background: linear-gradient(135deg, #66bb6a 0%, #4ade80 100%);
+  color: #fff;
+  border: none;
   width: 150px;
   height: 40px;
   font-size: 16px;
+  font-weight: 600;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 187, 106, 0.3);
 
   &.mobile-save-btn {
     width: 120px;
@@ -529,9 +528,10 @@ export default {
 }
 
 .save-btn:hover {
-  background: linear-gradient(to right, #237ff4, #9c40d5);
-  color: white;
-  border: none;
+  background: linear-gradient(135deg, #5ca85c 0%, #22c55e 100%);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(102, 187, 106, 0.4);
 }
 
 .custom-switch .el-switch__core {
@@ -578,4 +578,5 @@ export default {
     overflow-y: auto;
   }
 }
+
 </style>
