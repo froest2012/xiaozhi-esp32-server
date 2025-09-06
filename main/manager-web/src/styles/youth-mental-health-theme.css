@@ -1,0 +1,1276 @@
+/* 青少年心理健康主题 - 全局CSS覆盖 */
+
+
+/* 使用最高优先级确保样式生效 */
+
+
+/* 强制覆盖所有样式 */
+
+html body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+
+/* ===== 注册页面样式 ===== */
+
+
+/* 注册页面正念效果背景 */
+
+body .welcome {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 25%, #f0fdf4 50%, #f0f9ff 75%, #e0f2fe 100%) !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+
+/* 正念呼吸效果 - 缓慢的呼吸动画 */
+
+body .welcome::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 20%, rgba(102, 187, 106, 0.20), transparent 40%), radial-gradient(circle at 70% 80%, rgba(129, 199, 132, 0.18), transparent 45%), radial-gradient(circle at 20% 70%, rgba(165, 214, 167, 0.15), transparent 50%), radial-gradient(circle at 80% 30%, rgba(74, 144, 164, 0.12), transparent 55%);
+    animation: mindfulBreath 6s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+
+/* 正念粒子效果 */
+
+body .welcome::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(3px 3px at 20px 30px, rgba(102, 187, 106, 0.5), transparent), radial-gradient(3px 3px at 40px 70px, rgba(129, 199, 132, 0.4), transparent), radial-gradient(2px 2px at 90px 40px, rgba(165, 214, 167, 0.6), transparent), radial-gradient(2px 2px at 130px 80px, rgba(74, 144, 164, 0.5), transparent), radial-gradient(3px 3px at 160px 30px, rgba(102, 187, 106, 0.4), transparent);
+    background-repeat: repeat;
+    background-size: 200px 100px;
+    animation: floatParticles 15s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+
+/* 正念呼吸动画 */
+
+@keyframes mindfulBreath {
+    0%,
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 0.6;
+    }
+    50% {
+        transform: scale(1.1) rotate(180deg);
+        opacity: 0.8;
+    }
+}
+
+
+/* 浮动粒子动画 */
+
+@keyframes floatParticles {
+    0% {
+        transform: translateY(0px) translateX(0px);
+    }
+    25% {
+        transform: translateY(-10px) translateX(5px);
+    }
+    50% {
+        transform: translateY(-5px) translateX(-5px);
+    }
+    75% {
+        transform: translateY(-15px) translateX(3px);
+    }
+    100% {
+        transform: translateY(0px) translateX(0px);
+    }
+}
+
+
+/* 标题闪烁动画 */
+
+@keyframes titleShimmer {
+    0%,
+    100% {
+        left: -100%;
+    }
+    50% {
+        left: 100%;
+    }
+}
+
+
+/* 正念脉冲动画 */
+
+@keyframes mindfulPulse {
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+}
+
+
+/* 注册页面左侧人物图片隐藏 */
+
+body .welcome .login-person {
+    display: none !important;
+}
+
+
+/* 注册表单样式 */
+
+body .welcome .login-box {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 25px !important;
+    box-shadow: 0 25px 80px rgba(74, 144, 164, 0.15) !important;
+    margin: 0 auto !important;
+    width: 600px !important;
+    padding: 60px !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 10 !important;
+    min-height: 700px !important;
+}
+
+
+/* 注册表单标题区域样式 - 更贴合页面 */
+
+body .welcome .login-box>div:first-child {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    margin-bottom: 25px !important;
+    padding: 15px 0 !important;
+    text-align: center !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    position: relative !important;
+}
+
+
+/* 标题区域背景装饰 - 已移除 */
+
+
+/* 隐藏注册表单内的Hi图标 */
+
+body .welcome .login-box img[src*="hi.png"] {
+    display: none !important;
+}
+
+
+/* 在Hi图标位置添加正念emoji */
+
+body .welcome .login-box>div:first-child>div:first-child::before {
+    content: "🧘‍♀️";
+    font-size: 32px;
+    display: inline-block;
+    animation: mindfulPulse 4s ease-in-out infinite;
+    margin-bottom: 8px;
+}
+
+
+/* 注册文字样式 - 更柔和 */
+
+body .welcome .login-text {
+    font-size: 32px !important;
+    font-weight: 600 !important;
+    background: linear-gradient(135deg, #4A90A4 0%, #83C5BE 50%, #66BB6A 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    margin: 0 !important;
+    letter-spacing: 2px !important;
+    text-shadow: 0 2px 4px rgba(74, 144, 164, 0.1) !important;
+}
+
+
+/* 注册欢迎文字样式 - 更温馨 */
+
+body .welcome .login-welcome {
+    font-size: 16px !important;
+    color: #6b7280 !important;
+    font-weight: 400 !important;
+    margin: 0 !important;
+    letter-spacing: 1.5px !important;
+    opacity: 0.8 !important;
+}
+
+
+/* 注册表单输入框样式 */
+
+body .welcome .input-box {
+    background: rgba(255, 255, 255, 0.8) !important;
+    border: 1px solid rgba(74, 144, 164, 0.2) !important;
+    border-radius: 15px !important;
+    backdrop-filter: blur(10px) !important;
+    margin-bottom: 25px !important;
+    transition: all 0.3s ease !important;
+    width: 100% !important;
+    height: 55px !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 0 15px !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+body .welcome .input-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(74, 144, 164, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+body .welcome .input-box:hover::before {
+    left: 100%;
+}
+
+body .welcome .input-box:hover {
+    border-color: rgba(74, 144, 164, 0.4) !important;
+    box-shadow: 0 8px 25px rgba(74, 144, 164, 0.15) !important;
+    transform: translateY(-2px) !important;
+}
+
+
+/* 注册表单输入框内部样式 */
+
+body .welcome .input-box .el-input__inner {
+    background: transparent !important;
+    border: none !important;
+    color: #1f2937 !important;
+    font-size: 16px !important;
+    padding: 0 15px !important;
+    height: 100% !important;
+    line-height: 1.5 !important;
+    flex: 1 !important;
+}
+
+
+/* 注册表单输入框图标样式 */
+
+body .welcome .input-box .input-icon {
+    width: 20px !important;
+    height: 20px !important;
+    margin-right: 10px !important;
+    flex-shrink: 0 !important;
+    filter: drop-shadow(0 2px 4px rgba(74, 144, 164, 0.2)) !important;
+}
+
+
+/* 注册按钮样式 */
+
+body .welcome .login-btn {
+    background: linear-gradient(135deg, #4A90A4 0%, #83C5BE 100%) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 15px !important;
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    height: 55px !important;
+    width: 100% !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 8px 25px rgba(74, 144, 164, 0.3) !important;
+    margin-top: 20px !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+body .welcome .login-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+body .welcome .login-btn:hover::before {
+    left: 100%;
+}
+
+body .welcome .login-btn:hover {
+    background: linear-gradient(135deg, #3A7A8A 0%, #6BB6AA 100%) !important;
+    transform: translateY(-3px) !important;
+    box-shadow: 0 12px 35px rgba(74, 144, 164, 0.4) !important;
+}
+
+
+/* 注册页面链接样式 */
+
+body .welcome .login-box a {
+    color: #4A90A4 !important;
+    text-decoration: none !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
+}
+
+body .welcome .login-box a:hover {
+    color: #3A7A8A !important;
+    text-decoration: underline !important;
+}
+
+
+/* 注册页面协议文字样式 */
+
+body .welcome .login-box .agreement-text {
+    color: #6b7280 !important;
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+    margin-top: 20px !important;
+}
+
+body .welcome .login-box .agreement-text a {
+    color: #4A90A4 !important;
+    font-weight: 600 !important;
+}
+
+
+/* 验证码相关样式 */
+
+body .welcome .login-box .captcha-container {
+    display: flex !important;
+    gap: 10px !important;
+    align-items: center !important;
+}
+
+body .welcome .login-box .captcha-image {
+    border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(74, 144, 164, 0.2) !important;
+    transition: all 0.3s ease !important;
+}
+
+body .welcome .login-box .captcha-image:hover {
+    transform: scale(1.05) !important;
+    box-shadow: 0 6px 20px rgba(74, 144, 164, 0.3) !important;
+}
+
+
+/* 发送验证码按钮样式 */
+
+body .welcome .login-box .send-code-btn {
+    background: linear-gradient(135deg, #4A90A4 0%, #83C5BE 100%) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    min-width: 120px !important;
+    height: 55px !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 15px rgba(74, 144, 164, 0.3) !important;
+}
+
+body .welcome .login-box .send-code-btn:hover {
+    background: linear-gradient(135deg, #3A7A8A 0%, #6BB6AA 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(74, 144, 164, 0.4) !important;
+}
+
+
+/* 修复验证码和发送按钮对齐问题 */
+
+body .welcome .login-box div[style*="display: flex"][style*="align-items: center"][style*="margin-top: 20px"] {
+    display: flex !important;
+    align-items: center !important;
+    margin-top: 20px !important;
+    width: 100% !important;
+    gap: 10px !important;
+}
+
+
+/* 验证码输入框在flex容器中的样式 */
+
+body .welcome .login-box div[style*="display: flex"][style*="align-items: center"][style*="margin-top: 20px"] .input-box {
+    flex: 1 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+
+/* 验证码图片对齐 */
+
+body .welcome .login-box img[alt="验证码"] {
+    border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(74, 144, 164, 0.2) !important;
+    transition: all 0.3s ease !important;
+    height: 55px !important;
+    width: auto !important;
+    flex-shrink: 0 !important;
+}
+
+body .welcome .login-box img[alt="验证码"]:hover {
+    transform: scale(1.05) !important;
+    box-shadow: 0 6px 20px rgba(74, 144, 164, 0.3) !important;
+}
+
+
+/* 发送验证码按钮对齐 */
+
+body .welcome .login-box .send-captcha-btn,
+body .welcome .login-box .el-button[class*="send"] {
+    background: linear-gradient(135deg, #4A90A4 0%, #83C5BE 100%) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    min-width: 120px !important;
+    height: 55px !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 15px rgba(74, 144, 164, 0.3) !important;
+    flex-shrink: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+body .welcome .login-box .send-captcha-btn:hover,
+body .welcome .login-box .el-button[class*="send"]:hover {
+    background: linear-gradient(135deg, #3A7A8A 0%, #6BB6AA 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(74, 144, 164, 0.4) !important;
+}
+
+
+/* 注册页面移动端适配 */
+
+@media screen and (max-width: 768px) {
+    body .welcome .login-box {
+        width: 95% !important;
+        padding: 40px !important;
+        min-height: 600px !important;
+    }
+    body .welcome .input-box {
+        height: 50px !important;
+    }
+    body .welcome .login-btn {
+        height: 50px !important;
+        font-size: 16px !important;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    body .welcome .login-box {
+        width: 98% !important;
+        padding: 30px !important;
+        min-height: 550px !important;
+    }
+    body .welcome .input-box {
+        height: 48px !important;
+    }
+    body .welcome .login-btn {
+        height: 48px !important;
+        font-size: 15px !important;
+    }
+}
+
+
+/* ===== 登录页面样式 ===== */
+
+
+/* 登录页面正念效果背景 */
+
+body .welcome {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 25%, #f0fdf4 50%, #f0f9ff 75%, #e0f2fe 100%) !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+
+/* 登录页面正念呼吸效果 */
+
+body .welcome::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 20%, rgba(102, 187, 106, 0.20), transparent 40%), radial-gradient(circle at 70% 80%, rgba(129, 199, 132, 0.18), transparent 45%), radial-gradient(circle at 20% 70%, rgba(165, 214, 167, 0.15), transparent 50%), radial-gradient(circle at 80% 30%, rgba(74, 144, 164, 0.12), transparent 55%);
+    animation: mindfulBreath 6s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+
+/* 登录页面正念粒子效果 */
+
+body .welcome::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(3px 3px at 20px 30px, rgba(102, 187, 106, 0.5), transparent), radial-gradient(3px 3px at 40px 70px, rgba(129, 199, 132, 0.4), transparent), radial-gradient(2px 2px at 90px 40px, rgba(165, 214, 167, 0.6), transparent), radial-gradient(2px 2px at 130px 80px, rgba(74, 144, 164, 0.5), transparent), radial-gradient(3px 3px at 160px 30px, rgba(102, 187, 106, 0.4), transparent);
+    background-repeat: repeat;
+    background-size: 200px 100px;
+    animation: floatParticles 15s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+
+/* 隐藏左上角图标，但保留标题文字 */
+
+body .welcome .el-header div img[src*="xiaozhi-logo.png"],
+body .welcome .el-header div img[src*="xiaozhi-ai.png"],
+body .welcome .el-header img[src*="xiaozhi-logo.png"],
+body .welcome .el-header img[src*="xiaozhi-ai.png"],
+.welcome .el-header div img[src*="xiaozhi-logo.png"],
+.welcome .el-header div img[src*="xiaozhi-ai.png"],
+.welcome .el-header img[src*="xiaozhi-logo.png"],
+.welcome .el-header img[src*="xiaozhi-ai.png"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+
+/* 移除重复的AI小新-智控台标题 - 已在header-left::after中定义 */
+
+
+/* 额外确保隐藏所有可能的图标 */
+
+body .welcome .el-header div img,
+.welcome .el-header div img {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+
+/* 隐藏登录表单内的智控台图标 */
+
+body .welcome .login-box img[src*="hi.png"] {
+    display: none !important;
+}
+
+
+/* 修改登录表单标题区域样式 - 更轻盈 */
+
+body .welcome .login-box>div:first-child {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    margin-bottom: 25px !important;
+    padding: 15px 0 !important;
+    text-align: center !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    position: relative !important;
+}
+
+
+/* 登录标题区域背景装饰 - 已移除 */
+
+
+/* 在Hi图标位置添加正念emoji */
+
+body .welcome .login-box>div:first-child>div:first-child::before {
+    content: "🧘‍♀️";
+    font-size: 24px;
+    display: inline-block;
+    animation: mindfulPulse 4s ease-in-out infinite;
+    margin-bottom: 5px;
+}
+
+
+/* 登录文字样式 - 减轻重量 */
+
+body .welcome .login-text {
+    font-size: 24px !important;
+    font-weight: 500 !important;
+    background: linear-gradient(135deg, #4A90A4 0%, #83C5BE 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    margin: 0 !important;
+    letter-spacing: 1px !important;
+    opacity: 0.9 !important;
+}
+
+
+/* 欢迎文字样式 - 更轻盈 */
+
+body .welcome .login-welcome {
+    font-size: 13px !important;
+    color: #9ca3af !important;
+    font-weight: 300 !important;
+    margin: 0 !important;
+    letter-spacing: 1.2px !important;
+    opacity: 0.8 !important;
+}
+
+
+/* 登录页面左侧人物图片隐藏 */
+
+body .welcome .login-person {
+    display: none !important;
+}
+
+
+/* 登录表单样式 - 页面居中显示 */
+
+body .welcome .login-box {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 20px 60px rgba(74, 144, 164, 0.2) !important;
+    margin: 0 auto !important;
+    width: 600px !important;
+    padding: 60px !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 10 !important;
+    min-height: 650px !important;
+}
+
+
+/* 登录表单输入框样式 */
+
+body .welcome .input-box {
+    background: rgba(255, 255, 255, 0.8) !important;
+    border: 1px solid rgba(74, 144, 164, 0.2) !important;
+    border-radius: 12px !important;
+    backdrop-filter: blur(10px) !important;
+    margin-bottom: 25px !important;
+    transition: all 0.3s ease !important;
+    width: 100% !important;
+    height: 55px !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 0 15px !important;
+}
+
+body .welcome .input-box:hover {
+    border-color: rgba(74, 144, 164, 0.4) !important;
+    box-shadow: 0 4px 12px rgba(74, 144, 164, 0.1) !important;
+}
+
+body .welcome .input-box .el-input__inner {
+    background: transparent !important;
+    border: none !important;
+    color: #1f2937 !important;
+    font-size: 16px !important;
+    padding: 0 15px !important;
+    height: 100% !important;
+    line-height: 1.5 !important;
+    flex: 1 !important;
+}
+
+
+/* 输入框图标样式 */
+
+body .welcome .input-box .input-icon {
+    width: 20px !important;
+    height: 20px !important;
+    margin-right: 10px !important;
+    flex-shrink: 0 !important;
+}
+
+body .welcome .input-box .el-input__inner::placeholder {
+    color: #9ca3af !important;
+}
+
+
+/* 登录按钮样式 */
+
+body .welcome .login-btn {
+    background: linear-gradient(135deg, #4A90A4 0%, #83C5BE 100%) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 12px !important;
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    height: 55px !important;
+    width: 100% !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 15px rgba(74, 144, 164, 0.3) !important;
+    margin-top: 20px !important;
+}
+
+body .welcome .login-btn:hover {
+    background: linear-gradient(135deg, #3A7A8A 0%, #6BB6AA 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(74, 144, 164, 0.4) !important;
+}
+
+
+/* 登录页面背景 */
+
+body .welcome {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%) !important;
+    position: relative !important;
+}
+
+body .welcome::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 30% 20%, rgba(102, 187, 106, 0.05), transparent 50%), radial-gradient(circle at 70% 80%, rgba(165, 214, 167, 0.05), transparent 50%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+
+/* 登录文本样式 */
+
+body .welcome .login-text {
+    background: linear-gradient(135deg, #4A90A4 0%, #83C5BE 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    font-weight: 700 !important;
+    font-size: 24px !important;
+}
+
+
+/* ===== 头部区域样式 ===== */
+
+
+/* 隐藏原始logo和头像 */
+
+body .header-left .logo-img,
+body .header-left .brand-img,
+body .header-right .avatar-img,
+body .mobile-user-info .mobile-avatar-img {
+    display: none !important;
+}
+
+
+/* 添加新的标题样式 */
+
+body .header-left::after {
+    content: "AI小新-智控台";
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    color: #2c3e50;
+    background: linear-gradient(135deg, #4A90A4 0%, #83C5BE 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+
+/* 欢迎区域布局优化 - 解决文案和按钮重叠问题 */
+
+
+/* 增加欢迎区域高度 */
+
+body .welcome .add-device {
+    height: 320px !important;
+}
+
+
+/* 优化欢迎区域背景布局 */
+
+body .welcome .add-device-bg {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    padding: 40px 0 40px 0 !important;
+}
+
+
+/* 优化文案间距 - 针对每个文案元素精确控制 */
+
+
+/* 第一个文案：你好，小智 */
+
+body .welcome .hellow-text:first-of-type {
+    margin-bottom: 20px !important;
+    margin-top: 0 !important;
+}
+
+
+/* 第二个文案：让我们度过美好的一天 */
+
+body .welcome .hellow-text:last-of-type {
+    margin-bottom: 25px !important;
+    margin-top: 0 !important;
+}
+
+
+/* 优化英文提示间距 */
+
+body .welcome .hi-hint {
+    margin-bottom: 35px !important;
+    margin-top: 0 !important;
+}
+
+
+/* 移除按钮顶部间距，避免重叠 */
+
+body .welcome .add-device-btn {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+
+/* 移动端适配 */
+
+@media screen and (max-width: 768px) {
+    body .welcome .add-device {
+        height: 280px !important;
+    }
+    body .welcome .add-device-bg {
+        padding: 30px 0 30px 0 !important;
+    }
+    body .welcome .hellow-text:first-of-type {
+        margin-bottom: 15px !important;
+    }
+    body .welcome .hellow-text:last-of-type {
+        margin-bottom: 20px !important;
+    }
+    body .welcome .hi-hint {
+        margin-bottom: 25px !important;
+    }
+}
+
+
+/* 头部左侧点击效果 */
+
+body .header-left {
+    cursor: pointer;
+}
+
+
+/* 导航菜单样式 */
+
+body .equipment-management {
+    background: rgba(255, 255, 255, 0.8) !important;
+    border: 1px solid rgba(74, 144, 164, 0.2) !important;
+    backdrop-filter: blur(10px) !important;
+}
+
+body .equipment-management:hover {
+    background: rgba(74, 144, 164, 0.1) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(74, 144, 164, 0.2) !important;
+}
+
+body .equipment-management.active-tab {
+    background: linear-gradient(135deg, #4A90A4 0%, #83C5BE 100%) !important;
+    color: #fff !important;
+    box-shadow: 0 4px 12px rgba(74, 144, 164, 0.4) !important;
+}
+
+
+/* 移动端标题样式 */
+
+@media screen and (max-width: 768px) {
+    body .header-left::after {
+        font-size: 20px;
+    }
+}
+
+
+/* ===== 首页欢迎区域样式 ===== */
+
+
+/* 修改欢迎文本 */
+
+body .hellow-text:first-child::before {
+    content: "🌱 你好，小新";
+    display: block;
+    color: #3d4566;
+    font-size: 20px;
+    font-weight: 500;
+    margin-left: 75px;
+}
+
+body .hellow-text:first-child {
+    font-size: 0 !important;
+    line-height: 0 !important;
+}
+
+body .hellow-text:first-child * {
+    display: none !important;
+}
+
+
+/* 修改第二行文本 */
+
+body .hellow-text:nth-child(2)::before {
+    content: "让我们一起成长与陪伴！ 🌟";
+    display: block;
+    color: #3d4566;
+    font-size: 20px;
+    font-weight: 500;
+    margin-left: 75px;
+}
+
+body .hellow-text:nth-child(2) {
+    font-size: 0 !important;
+    line-height: 0 !important;
+}
+
+body .hellow-text:nth-child(2) * {
+    display: none !important;
+}
+
+
+/* 修改英文提示 */
+
+body .hi-hint::before {
+    content: "Together for growth and care 💚";
+    display: block;
+    color: #666;
+    font-size: 14px;
+    margin-top: 8px;
+    margin-left: 75px;
+}
+
+body .hi-hint {
+    font-size: 0 !important;
+    line-height: 0 !important;
+}
+
+
+/* 修改添加按钮 */
+
+body .add-device-btn::before {
+    content: "创建心理助手";
+    display: inline-flex;
+    align-items: center;
+    height: 40px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #4A90A4 0%, #83C5BE 100%);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 0 20px;
+    gap: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(74, 144, 164, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+    margin-left: 75px;
+    margin-top: 15px;
+}
+
+body .add-device-btn::after {
+    content: "+";
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+}
+
+body .add-device-btn {
+    position: relative;
+}
+
+body .add-device-btn * {
+    display: none !important;
+}
+
+body .add-device-btn:hover::before {
+    background: linear-gradient(135deg, #3A7A8A 0%, #6BB6AA 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(74, 144, 164, 0.4);
+}
+
+
+/* 首页背景样式 */
+
+body .welcome {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%) !important;
+    position: relative;
+}
+
+body .welcome::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 30% 20%, rgba(102, 187, 106, 0.05), transparent 50%), radial-gradient(circle at 70% 80%, rgba(165, 214, 167, 0.05), transparent 50%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+
+/* 添加设备区域样式 */
+
+body .add-device {
+    height: 200px !important;
+    border-radius: 20px !important;
+    background: linear-gradient(135deg, rgba(102, 187, 106, 0.1) 0%, rgba(129, 199, 132, 0.1) 30%, rgba(165, 214, 167, 0.1) 60%, rgba(200, 230, 201, 0.1) 100%) !important;
+    box-shadow: 0 10px 30px rgba(102, 187, 106, 0.15) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    z-index: 2;
+    position: relative;
+    overflow: hidden;
+}
+
+body .add-device-bg {
+    background: linear-gradient(135deg, rgba(102, 187, 106, 0.1) 0%, rgba(129, 199, 132, 0.15) 30%, rgba(165, 214, 167, 0.1) 60%, rgba(200, 230, 201, 0.08) 100%) !important;
+    position: relative;
+}
+
+body .add-device-bg::before {
+    content: '';
+    position: absolute;
+    top: 20%;
+    right: 10%;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba(129, 199, 132, 0.2) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: float 6s ease-in-out infinite;
+}
+
+body .add-device-bg::after {
+    content: '';
+    position: absolute;
+    bottom: 20%;
+    left: 15%;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(200, 230, 201, 0.3) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: float 8s ease-in-out infinite reverse;
+}
+
+
+/* 动画效果 */
+
+@keyframes float {
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+@keyframes grow {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+@keyframes twinkle {
+    0%,
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+    25% {
+        transform: scale(1.1) rotate(5deg);
+        opacity: 0.9;
+    }
+    50% {
+        transform: scale(1.2) rotate(-5deg);
+        opacity: 0.8;
+    }
+    75% {
+        transform: scale(1.1) rotate(3deg);
+        opacity: 0.9;
+    }
+}
+
+@keyframes heartbeat {
+    0%,
+    40%,
+    100% {
+        transform: scale(1);
+    }
+    20% {
+        transform: scale(1.1);
+    }
+}
+
+
+/* ===== 弹窗样式 ===== */
+
+
+/* 移除弹窗遮罩 */
+
+body .el-dialog__wrapper {
+    background-color: transparent !important;
+}
+
+
+/* 弹窗样式 */
+
+body .el-dialog {
+    border-radius: 20px !important;
+    box-shadow: 0 20px 60px rgba(74, 144, 164, 0.2) !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+
+/* 隐藏弹窗关闭按钮 */
+
+body .el-dialog__headerbtn {
+    display: none !important;
+}
+
+
+/* 弹窗内容样式 */
+
+body .el-dialog__body {
+    padding: 4px 6px !important;
+}
+
+
+/* 弹窗头部样式 */
+
+body .el-dialog__header {
+    padding: 0 !important;
+    border-bottom: none !important;
+}
+
+
+/* 保存按钮样式 */
+
+body .save-btn,
+body .el-button--primary {
+    background: linear-gradient(135deg, #4A90A4 0%, #83C5BE 100%) !important;
+    color: #fff !important;
+    border: none !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 15px rgba(74, 144, 164, 0.3) !important;
+}
+
+body .save-btn:hover,
+body .el-button--primary:hover {
+    background: linear-gradient(135deg, #3A7A8A 0%, #6BB6AA 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(74, 144, 164, 0.4) !important;
+}
+
+
+/* ===== 表格样式 ===== */
+
+
+/* 表格文字颜色 */
+
+body .el-table__header th {
+    color: #1f2937 !important;
+    font-weight: 600 !important;
+}
+
+body .el-table__body td {
+    color: #1f2937 !important;
+}
+
+
+/* 搜索按钮样式 */
+
+body .btn-search {
+    background: linear-gradient(135deg, #4A90A4 0%, #83C5BE 100%) !important;
+    color: white !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 15px rgba(74, 144, 164, 0.3) !important;
+    border: none !important;
+}
+
+body .btn-search:hover {
+    background: linear-gradient(135deg, #3A7A8A 0%, #6BB6AA 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(74, 144, 164, 0.4) !important;
+}
+
+
+/* 页面标题样式 */
+
+body .page-title {
+    background: linear-gradient(135deg, #4A90A4 0%, #83C5BE 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    font-weight: 700 !important;
+}
+
+
+/* ===== 移动端适配 ===== */
+
+@media screen and (max-width: 768px) {
+    body .el-table__header th,
+    body .el-table__body td {
+        color: #1f2937 !important;
+    }
+    body .add-device-btn::before {
+        margin-left: 20px;
+        font-size: 14px;
+        height: 36px;
+        padding: 0 16px;
+    }
+    body .welcome .login-box {
+        width: 95% !important;
+        padding: 40px !important;
+        min-height: 550px !important;
+        position: absolute !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    body .add-device-btn::before {
+        margin-left: 15px;
+        font-size: 13px;
+        height: 32px;
+        padding: 0 12px;
+    }
+    body .welcome .login-box {
+        width: 98% !important;
+        padding: 30px !important;
+        min-height: 500px !important;
+        position: absolute !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+    }
+}
